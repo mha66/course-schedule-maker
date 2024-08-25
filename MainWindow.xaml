@@ -6,7 +6,25 @@
         xmlns:local="clr-namespace:CourseScheduleMaker"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <Grid HorizontalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
 
+        <DockPanel Grid.Row="0" Grid.Column="0">
+            <TextBlock DockPanel.Dock="Top" Height="20">Course</TextBlock>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="(courseCode)"/>
+                <ComboBox x:Name="namesComboBox" Margin="10,0,0,0"/>
+                <ComboBox x:Name="groupsComboBox" Margin="30,0,0,0"/>
+                <Button x:Name="AddCourseBtn" Margin="20,0,0,0" Click="AddCourseBtn_Click">Add</Button>
+            </StackPanel>
+        </DockPanel>
+
+        <Grid x:Name="scheduleGrid" Grid.Row="1" Grid.Column="0" ShowGridLines="True" Margin="0,40,0,0"/>
     </Grid>
 </Window>
