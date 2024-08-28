@@ -6,27 +6,22 @@ using System.Threading.Tasks;
 
 namespace CourseScheduleMaker
 {
-    internal class Course
+    internal class Course : DBObject
     {
-        public int Id { get; private set; }
-        public string Name {  get; set; }
+    
         public string Code { get; set; }
         public List<Group> Groups { get; set; } = new List<Group>();
         public List<string> Professors { get; set; } = new List<string>();
         public List<string> TAs { get; set; } = new List<string>();
 
         
-        public Course() 
+        public Course() : base(-1, "EXCOURSE")
         {
-            Id = -1;
-            Name = "Placeholder name";
             Code = "EX123";
         }
 
-        public Course(int id, string name, string code)
+        public Course(int id, string name, string code) : base(id, name)
         {
-            Id = id;
-            Name = name ?? throw new ArgumentNullException(nameof(name));
             Code = code ?? throw new ArgumentNullException(nameof(code));
         }
 

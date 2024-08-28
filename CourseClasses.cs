@@ -7,23 +7,21 @@ using System.Threading.Tasks;
 
 namespace CourseScheduleMaker
 {
-    internal class CourseClasses
+    internal class CourseClasses : DBObject
     {
-        public int Id { get; set; }
+        public override string Name { get => $"{Course.Code} {Group.Name}"; }
         public Course Course { get; set; }
         public List<Session> Sessions = new List<Session>(3);
         public Group Group { get; set; }
         
-       public CourseClasses() 
+       public CourseClasses() : base(-1)
         {
-            Id = -1;
             Course = new Course();
             Group = new Group();
         }
 
-        public CourseClasses(int id, Course course, Group classesGroup)
+        public CourseClasses(int id, Course course, Group classesGroup) : base(id)
         {
-            Id = id;
             Course = course;
             classesGroup.AddClasses(this);
         }

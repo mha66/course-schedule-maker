@@ -16,9 +16,9 @@ namespace CourseScheduleMaker
         [Description("Laboratory")]
         Lab
     }
-    internal class Session
+    internal class Session : DBObject
     {
-        public int Id { get; set; }
+        public override string Name { get => $"{SessionClasses.Name} {SessionKind}"; }
         public Course SessionCourse { get; set; }
         public Group SessionGroup { get; set; }
         public CourseClasses SessionClasses { get; set; }
@@ -27,9 +27,8 @@ namespace CourseScheduleMaker
         public DayOfWeek Day {  get; set; }
         public int Period { get; set; }
 
-        public Session()
+        public Session() : base(-1)
         {
-            Id = -1;
             SessionCourse = new Course();
             SessionGroup = new Group();
             SessionClasses = new CourseClasses();
@@ -39,9 +38,8 @@ namespace CourseScheduleMaker
             Period = 0;
         }
 
-        public Session(int id, CourseClasses sessionClasses, SessionType sessionKind, string instructor, DayOfWeek day, int period)
+        public Session(int id, CourseClasses sessionClasses, SessionType sessionKind, string instructor, DayOfWeek day, int period) : base(id)
         {
-            Id = id;
             SessionKind = sessionKind;
             Instructor = instructor ?? throw new ArgumentNullException(nameof(instructor));
             Day = day;
@@ -49,7 +47,7 @@ namespace CourseScheduleMaker
             sessionClasses.AddSession(this);
         }
 
-        public override string ToString()
+        public override string? ToString()
         {
             return $"{SessionCourse.Name} ({SessionCourse.Code})\n{SessionKind} {SessionGroup.Name}\n{Instructor}";
         }

@@ -6,23 +6,16 @@ using System.Threading.Tasks;
 
 namespace CourseScheduleMaker
 {
-    internal class Group
+    internal class Group : DBObject
     {
-        public int Id { get; private set; }
-        public string Name { get; set; }
+ 
         public List<Course> Courses { get; set; } = new List<Course>();
         public List<CourseClasses> Classes { get; set; } = new List<CourseClasses>();
 
-        public Group() 
-        {
-            Id = -1;
-            Name = "EE123";
-        }
+        public Group() : base(-1, "EXGROUP") {  }
 
-        public Group(int id, string name, Course initialCourse)
+        public Group(int id, string name, Course initialCourse) : base(id, name)
         {
-            Id = id;
-            Name = name ?? throw new ArgumentNullException(nameof(name));
             initialCourse.AddGroup(this);
         }
 
