@@ -40,10 +40,12 @@
                 <TextBlock Text="(courseCode)"/>
                 <ComboBox x:Name="coursesComboBox" Margin="10,0,0,0" 
                           ItemTemplate="{StaticResource courseNameTemplate}" 
-                          ItemsSource="{Binding Path=Courses}"/>
+                          ItemsSource="{Binding Path=Courses}"
+                          SelectionChanged="coursesComboBox_SelectionChanged"/>
                 <ComboBox x:Name="groupsComboBox" Margin="30,0,0,0"
                           ItemTemplate="{StaticResource groupNameTemplate}" 
-                          ItemsSource="{Binding Path=Groups}"/>
+                          ItemsSource="{Binding Path=GroupsView}"
+                          SelectionChanged="groupsComboBox_SelectionChanged"/>
                 <Button x:Name="addCourseBtn" Margin="20,0,0,0" Click="AddCourseBtn_Click">Add</Button>
             </StackPanel>
         </DockPanel>

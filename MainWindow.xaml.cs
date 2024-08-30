@@ -24,15 +24,20 @@ namespace CourseScheduleMaker
     {
         
         TextBlock[,] courseBlocks = new TextBlock[7, 17];
+        public static ObservableCollection<Course>? CoursesView { get; set; }
         public static ObservableCollection<Course> Courses { get; set; } = new ObservableCollection<Course>();
+        public static ObservableCollection<Group>? GroupsView { get; set; }
         public static ObservableCollection<Group> Groups { get; set; } = new ObservableCollection<Group>();
         public MainWindow()
         {
-            //Courses.CollectionChanged += Groups_CollectionChanged;
             new Course(1, "Math", "BA232");
             Courses[0].AddGroup(new Group(1, "08CC05"));
             new Course(2, "Physics", "CC456");
             Courses[1].AddGroup(new Group(2, "04EE02"));
+
+            //*****find a better place for the following two lines
+            GroupsView = new ObservableCollection<Group>(Groups);
+            CoursesView = new ObservableCollection<Course>(Courses);
 
             InitializeComponent();
             SetupScheduleGrid();
@@ -107,6 +112,19 @@ namespace CourseScheduleMaker
             }
             */
         
+        }
+
+        private void coursesComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Course c = (Course) coursesComboBox.SelectedItem;
+            GroupsView!.Clear();
+            foreach(Group g in c.Groups)
+                GroupsView.Add(g);
+        }
+
+        private void groupsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

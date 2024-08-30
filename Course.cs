@@ -13,6 +13,8 @@ namespace CourseScheduleMaker
     {
     
         public string Code { get; set; }
+
+        // *****type could just be List<Group>
         public ObservableCollection<Group> Groups { get; set; } = new ObservableCollection<Group>();
         public List<string> Professors { get; set; } = new List<string>();
         public List<string> TAs { get; set; } = new List<string>();
@@ -20,21 +22,18 @@ namespace CourseScheduleMaker
         
         public Course() : base(-1, "EXCOURSE")
         {
-           // Groups.CollectionChanged += MainWindow.Groups_CollectionChanged;
             MainWindow.Courses.Add(this);
             Code = "EX123";
         }
 
         public Course(int id, string name, string code) : base(id, name)
         {
-            //Groups.CollectionChanged += MainWindow.Groups_CollectionChanged;
             MainWindow.Courses.Add(this);
             Code = code ?? throw new ArgumentNullException(nameof(code));
         }
 
         public Course(int id, string name, string code, ObservableCollection<Group> groups, List<string> professors, List<string> tas)
         {
-            //Groups.CollectionChanged += MainWindow.Groups_CollectionChanged;
             MainWindow.Courses.Add(this);
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -75,6 +74,11 @@ namespace CourseScheduleMaker
         public void RemoveTA(string ta)
         {
             TAs.Remove(ta);
+        }
+
+        public override string? ToString()
+        {
+            return $"({Code}) {Name}";
         }
     }
 }
