@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CourseScheduleMaker
 {
-    internal class CourseClasses : DBObject
+    public class CourseClasses : DBObject
     {
         public override string Name { get => $"{Course.Code} {Group.Name}"; }
         public Course Course { get; set; }

@@ -1,4 +1,10 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -16,14 +22,51 @@ namespace CourseScheduleMaker
     /// </summary>
     public partial class MainWindow : Window
     {
+        
         TextBlock[,] courseBlocks = new TextBlock[7, 17];
+        public static ObservableCollection<Course> Courses { get; set; } = new ObservableCollection<Course>();
+        public static ObservableCollection<Group> Groups { get; set; } = new ObservableCollection<Group>();
         public MainWindow()
         {
+            //Courses.CollectionChanged += Groups_CollectionChanged;
+            new Course(1, "Math", "BA232");
+            new Course(2, "Physics", "CC456");
+            Courses[0].AddGroup(new Group(1, "08CC05"));
+            Courses[1].AddGroup(new Group(2, "04EE02"));
+
+          
+           // foreach (Course c in Courses)
+                //foreach (Group g in c.Groups)
+                    //Groups.Add(g);
             InitializeComponent();
             SetupScheduleGrid();
+           
+            
+           
+           // coursesComboBox.ItemsSource = strings;
 
         }
+        public static void Groups_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+           
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
 
+                foreach(Group g in e.NewItems)
+                {
+                    if(!Groups.Contains(g))
+                        Groups.Add(g);
+                }
+                    /*foreach (Course c in e.NewItems)
+                    {
+                        if(c.Change)
+                        foreach (Group g in c.Groups)
+                            Groups.Add(g);
+                        c.Change = false;
+                    }*/
+
+            }
+        }
         private void SetupScheduleGrid()
         {
             //adds row and column definitions
@@ -91,6 +134,7 @@ namespace CourseScheduleMaker
                 courseBlocks[i, j].Text = Lecture.ToString();
             }
             */
+        
         }
     }
 }

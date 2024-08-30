@@ -5,7 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CourseScheduleMaker"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" 
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <Window.Resources>
+        <DataTemplate x:Key="courseNameTemplate">
+            <TextBlock>
+                <Run Text="{Binding Path=Code, StringFormat=({0})}"/>
+                <Run Text="{Binding Path=Name}"/>
+            </TextBlock>
+        </DataTemplate>
+        <DataTemplate x:Key="groupNameTemplate">
+            <TextBlock>
+                <Run Text="{Binding Path=Name}"/>
+            </TextBlock>
+        </DataTemplate>
+        <DataTemplate x:Key="courseCodeTemplate">
+            <TextBlock>
+             <Run Text="{Binding Path=Code, StringFormat=({0})}"/>
+            </TextBlock>
+        </DataTemplate>
+    </Window.Resources>
     <Grid HorizontalAlignment="Center">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -19,9 +38,13 @@
             <TextBlock DockPanel.Dock="Top" Height="20">Course</TextBlock>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="(courseCode)"/>
-                <ComboBox x:Name="namesComboBox" Margin="10,0,0,0"/>
-                <ComboBox x:Name="groupsComboBox" Margin="30,0,0,0"/>
-                <Button x:Name="AddCourseBtn" Margin="20,0,0,0" Click="AddCourseBtn_Click">Add</Button>
+                <ComboBox x:Name="coursesComboBox" Margin="10,0,0,0" 
+                          ItemTemplate="{StaticResource courseNameTemplate}" 
+                          ItemsSource="{Binding Path=Courses}"/>
+                <ComboBox x:Name="groupsComboBox" Margin="30,0,0,0"
+                          ItemTemplate="{StaticResource groupNameTemplate}" 
+                          ItemsSource="{Binding Path=Groups}"/>
+                <Button x:Name="addCourseBtn" Margin="20,0,0,0" Click="AddCourseBtn_Click">Add</Button>
             </StackPanel>
         </DockPanel>
 

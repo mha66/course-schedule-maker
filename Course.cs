@@ -1,32 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CourseScheduleMaker
 {
-    internal class Course : DBObject
+    public class Course : DBObject
     {
     
         public string Code { get; set; }
-        public List<Group> Groups { get; set; } = new List<Group>();
+        public ObservableCollection<Group> Groups { get; set; } = new ObservableCollection<Group>();
         public List<string> Professors { get; set; } = new List<string>();
         public List<string> TAs { get; set; } = new List<string>();
 
         
         public Course() : base(-1, "EXCOURSE")
         {
+            Groups.CollectionChanged += MainWindow.Groups_CollectionChanged;
+            MainWindow.Courses.Add(this);
             Code = "EX123";
         }
 
         public Course(int id, string name, string code) : base(id, name)
         {
+            Groups.CollectionChanged += MainWindow.Groups_CollectionChanged;
+            MainWindow.Courses.Add(this);
             Code = code ?? throw new ArgumentNullException(nameof(code));
         }
 
-        public Course(int id, string name, string code, List<Group> groups, List<string> professors, List<string> tas)
+        public Course(int id, string name, string code, ObservableCollection<Group> groups, List<string> professors, List<string> tas)
         {
+            Groups.CollectionChanged += MainWindow.Groups_CollectionChanged;
+            MainWindow.Courses.Add(this);
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Code = code ?? throw new ArgumentNullException(nameof(code));
@@ -34,6 +43,7 @@ namespace CourseScheduleMaker
             Professors = professors ?? throw new ArgumentNullException(nameof(professors));
             TAs = tas ?? throw new ArgumentNullException(nameof(tas));
         }
+
 
         //attach group to course only using this
         public void AddGroup(Group group)

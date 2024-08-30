@@ -16,7 +16,7 @@ namespace CourseScheduleMaker
         [Description("Laboratory")]
         Lab
     }
-    internal class Session : DBObject
+    public class Session : DBObject
     {
         public override string Name { get => $"{SessionClasses.Name} {SessionKind}"; }
         public Course SessionCourse { get; set; }

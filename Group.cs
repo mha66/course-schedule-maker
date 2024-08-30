@@ -1,19 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CourseScheduleMaker
 {
-    internal class Group : DBObject
+    public class Group : DBObject
     {
  
-        public List<Course> Courses { get; set; } = new List<Course>();
+        public ObservableCollection<Course> Courses { get; set; } = new ObservableCollection<Course>();
         public List<CourseClasses> Classes { get; set; } = new List<CourseClasses>();
 
         public Group() : base(-1, "EXGROUP") {  }
-
+        public Group(int id, string name) : base(id, name)
+        {
+           
+        }
         public Group(int id, string name, Course initialCourse) : base(id, name)
         {
             initialCourse.AddGroup(this);
@@ -46,6 +50,11 @@ namespace CourseScheduleMaker
         public void RemoveClasses(CourseClasses courseClasses)
         {
             Classes.Remove(courseClasses);
+        }
+
+        public override string? ToString()
+        {
+            return Name;
         }
     }
 }

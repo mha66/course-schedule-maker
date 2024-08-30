@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CourseScheduleMaker
 {
-    internal class DBObject
+    public class DBObject
     {
         public int Id { get; set; }
         public virtual string? Name { get; set; }
