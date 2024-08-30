@@ -104,7 +104,7 @@ namespace CourseScheduleMaker
             {
                 Course course = new Course(1, "Math", "BA222");
                 Group group = new Group(1, "07CC01", course);
-                CourseClasses classes = new CourseClasses(1, course, group);
+                GroupClasses classes = new GroupClasses(1, course, group);
                 Session Lecture = new Session(1, classes, SessionType.Lec, "Mark Smith", DayOfWeek.Sunday, 3);
                 Session Section = new Session(2, classes, SessionType.Sec, "John Doe", DayOfWeek.Tuesday, 1);
 

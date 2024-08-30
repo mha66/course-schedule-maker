@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 
 namespace CourseScheduleMaker
 {
-    public class CourseClasses : DBObject
+    public class GroupClasses : DBObject
     {
         public override string Name { get => $"{Course.Code} {Group.Name}"; }
         public Course Course { get; set; }
         public List<Session> Sessions = new List<Session>(3);
         public Group Group { get; set; }
         
-       public CourseClasses() : base(-1)
+       public GroupClasses() : base(-1)
         {
             Course = new Course();
             Group = new Group();
         }
 
-        public CourseClasses(int id, Course course, Group classesGroup) : base(id)
+        public GroupClasses(int id, Course course, Group classesGroup) : base(id)
         {
             Course = course;
             classesGroup.AddClasses(this);
