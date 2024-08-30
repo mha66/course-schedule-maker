@@ -30,43 +30,15 @@ namespace CourseScheduleMaker
         {
             //Courses.CollectionChanged += Groups_CollectionChanged;
             new Course(1, "Math", "BA232");
-            new Course(2, "Physics", "CC456");
             Courses[0].AddGroup(new Group(1, "08CC05"));
+            new Course(2, "Physics", "CC456");
             Courses[1].AddGroup(new Group(2, "04EE02"));
 
-          
-           // foreach (Course c in Courses)
-                //foreach (Group g in c.Groups)
-                    //Groups.Add(g);
             InitializeComponent();
             SetupScheduleGrid();
-           
-            
-           
-           // coursesComboBox.ItemsSource = strings;
 
         }
-        public static void Groups_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-           
-            if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-
-                foreach(Group g in e.NewItems)
-                {
-                    if(!Groups.Contains(g))
-                        Groups.Add(g);
-                }
-                    /*foreach (Course c in e.NewItems)
-                    {
-                        if(c.Change)
-                        foreach (Group g in c.Groups)
-                            Groups.Add(g);
-                        c.Change = false;
-                    }*/
-
-            }
-        }
+       
         private void SetupScheduleGrid()
         {
             //adds row and column definitions

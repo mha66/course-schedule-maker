@@ -13,14 +13,15 @@ namespace CourseScheduleMaker
         public ObservableCollection<Course> Courses { get; set; } = new ObservableCollection<Course>();
         public List<CourseClasses> Classes { get; set; } = new List<CourseClasses>();
 
-        public Group() : base(-1, "EXGROUP") {  }
+        public Group() : base(-1, "EXGROUP") { MainWindow.Groups.Add(this); }
         public Group(int id, string name) : base(id, name)
         {
-           
+            MainWindow.Groups.Add(this);
         }
         public Group(int id, string name, Course initialCourse) : base(id, name)
         {
             initialCourse.AddGroup(this);
+            MainWindow.Groups.Add(this);
         }
 
         public void AddCourse(Course course)
