@@ -10,8 +10,8 @@
     <Window.Resources>
         <DataTemplate x:Key="courseNameTemplate">
             <TextBlock>
-                <Run Text="{Binding Path=Code, StringFormat=({0})}"/>
                 <Run Text="{Binding Path=Name}"/>
+                <Run Text="{Binding Path=Code, StringFormat=({0})}"/>
             </TextBlock>
         </DataTemplate>
         <DataTemplate x:Key="groupNameTemplate">
@@ -37,7 +37,8 @@
         <DockPanel Grid.Row="0" Grid.Column="0">
             <TextBlock DockPanel.Dock="Top" Height="20">Course</TextBlock>
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="(courseCode)"/>
+                <TextBlock Margin="10,2,0,0"
+                           Text="{Binding ElementName=coursesComboBox, Path=SelectedItem}"/>
                 <ComboBox x:Name="coursesComboBox" Margin="10,0,0,0" 
                           ItemTemplate="{StaticResource courseNameTemplate}" 
                           ItemsSource="{Binding Path=Courses}"
