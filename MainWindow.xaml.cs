@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
@@ -24,20 +25,36 @@ namespace CourseScheduleMaker
     {
         
         TextBlock[,] courseBlocks = new TextBlock[7, 17];
+        //ViewModel
         public static ObservableCollection<Course>? CoursesView { get; set; }
-        public static ObservableCollection<Course> Courses { get; set; } = new ObservableCollection<Course>();
         public static ObservableCollection<Group>? GroupsView { get; set; }
+        public static ObservableCollection<GroupClasses>? ClassesView { get; set; } = new ObservableCollection<GroupClasses>();
+        //DBSource
+        public static ObservableCollection<Course> Courses { get; set; } = new ObservableCollection<Course>();
         public static ObservableCollection<Group> Groups { get; set; } = new ObservableCollection<Group>();
+        public static ObservableCollection<GroupClasses> Classes { get; set; } = new ObservableCollection<GroupClasses>();
         public MainWindow()
         {
             new Course(1, "Math", "BA232");
             Courses[0].AddGroup(new Group(1, "08CC05"));
+            Courses[0].Groups[0].AddClasses(new GroupClasses(1, Courses[0]));
+            Courses[0].Groups[0].Classes[0].AddSessions(new List<Session>(){ new Session(), new Session(1,SessionType.Sec,"John Smith",DayOfWeek.Tuesday, 4)});
             new Course(2, "Physics", "CC456");
             Courses[1].AddGroup(new Group(2, "04EE02"));
+            Courses[1].Groups[0].AddClasses(new GroupClasses(2, Courses[1]));
+            Courses[1].Groups[0].Classes[0].AddSessions(new List<Session>() 
+            {
+                new Session(1, SessionType.Lec, "Mark Roberts", DayOfWeek.Thursday, 2),
+                new Session(2, SessionType.Sec, "Jack Johnson", DayOfWeek.Tuesday, 6),
+            });
 
             //*****find a better place for the following two lines
             GroupsView = new ObservableCollection<Group>(Groups);
             CoursesView = new ObservableCollection<Course>(Courses);
+
+
+            ClassesView!.CollectionChanged += ClassesView_CollectionChanged!;
+
 
             InitializeComponent();
             SetupScheduleGrid();
@@ -95,22 +112,37 @@ namespace CourseScheduleMaker
                         scheduleGrid.Children.Add(tb);
                 }
         }
+
+        //gets called when ClassesView changes
+        private void ClassesView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            //list[^1] is equivalent to list[list.Count - 1] (last element)
+            GroupClasses? classes = (e.NewItems!.Count != 0)? e.NewItems![^1] as GroupClasses : null;
+            if (e.Action == NotifyCollectionChangedAction.Add && classes != null) 
+            {
+                foreach(Session session in classes!.Sessions)
+                {
+                    courseBlocks[((int)session.Day-5+7)%7, session.Period].Text = session.ToString();
+                }
+            }
+        }
         private void AddCourseBtn_Click(object sender, RoutedEventArgs e)
         {
-            /*
-            //Test
-            int i = 2, j = 5;
-            if (String.IsNullOrEmpty(courseBlocks[i, j].Text ))
-            {
-                Course course = new Course(1, "Math", "BA222");
-                Group group = new Group(1, "07CC01", course);
-                GroupClasses classes = new GroupClasses(1, course, group);
-                Session Lecture = new Session(1, classes, SessionType.Lec, "Mark Smith", DayOfWeek.Sunday, 3);
-                Session Section = new Session(2, classes, SessionType.Sec, "John Doe", DayOfWeek.Tuesday, 1);
 
-                courseBlocks[i, j].Text = Lecture.ToString();
+            Course? course = coursesComboBox.SelectedItem as Course;
+            Group? group = groupsComboBox.SelectedItem as Group;
+            if (course != null && group != null)
+            {
+                foreach (GroupClasses classes in group.Classes)
+                {
+                    if(classes.Course == course)
+                    {
+                        ClassesView!.Add(classes);
+                        break;
+                    }
+                }
+                            
             }
-            */
         
         }
 
@@ -124,7 +156,7 @@ namespace CourseScheduleMaker
 
         private void groupsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            //do something?
         }
     }
 }

@@ -41,7 +41,7 @@
                            Text="{Binding ElementName=coursesComboBox, Path=SelectedItem}"/>
                 <ComboBox x:Name="coursesComboBox" Margin="10,0,0,0" 
                           ItemTemplate="{StaticResource courseNameTemplate}" 
-                          ItemsSource="{Binding Path=Courses}"
+                          ItemsSource="{Binding Path=CoursesView}"
                           SelectionChanged="coursesComboBox_SelectionChanged"/>
                 <ComboBox x:Name="groupsComboBox" Margin="30,0,0,0"
                           ItemTemplate="{StaticResource groupNameTemplate}" 

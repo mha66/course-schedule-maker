@@ -80,5 +80,23 @@ namespace CourseScheduleMaker
         {
             return $"({Code})";
         }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is Course course &&
+                   Id == course.Id &&
+                   Name == course.Name &&
+                   Code == course.Code;
+        }
+
+        public static bool operator ==(Course? left, Course? right)
+        {
+            return EqualityComparer<Course>.Default.Equals(left, right);
+        }
+
+        public static bool operator !=(Course? left, Course? right)
+        {
+            return !(left == right);
+        }
     }
 }

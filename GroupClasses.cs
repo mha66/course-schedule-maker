@@ -20,6 +20,10 @@ namespace CourseScheduleMaker
             Group = new Group();
         }
 
+        public GroupClasses(int id, Course course) : base(id)
+        {
+            Course = course;
+        }
         public GroupClasses(int id, Course course, Group classesGroup) : base(id)
         {
             Course = course;
@@ -32,6 +36,17 @@ namespace CourseScheduleMaker
             session.SessionCourse = Course;
             session.SessionClasses = this;
             session.SessionGroup = Group;
+        }
+
+        public void AddSessions(IEnumerable<Session> sessions)
+        {
+            foreach (Session session in sessions)
+            {
+                Sessions.Add(session);
+                session.SessionCourse = Course;
+                session.SessionClasses = this;
+                session.SessionGroup = Group;
+            }
         }
         public void RemoveSession(Session session) 
         {

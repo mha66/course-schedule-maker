@@ -29,13 +29,18 @@ namespace CourseScheduleMaker
 
         public Session() : base(-1)
         {
-            SessionCourse = new Course();
-            SessionGroup = new Group();
-            SessionClasses = new GroupClasses();
             SessionKind = SessionType.Lec;
             Instructor = "John Doe";
             Day = new DayOfWeek();
             Period = 0;
+        }
+
+        public Session(int id, SessionType sessionKind, string instructor, DayOfWeek day, int period) : base(id)
+        {
+            SessionKind = sessionKind;
+            Instructor = instructor ?? throw new ArgumentNullException(nameof(instructor));
+            Day = day;
+            Period = period;
         }
 
         public Session(int id, GroupClasses sessionClasses, SessionType sessionKind, string instructor, DayOfWeek day, int period) : base(id)
@@ -47,6 +52,7 @@ namespace CourseScheduleMaker
             sessionClasses.AddSession(this);
         }
 
+        
         public override string? ToString()
         {
             return $"{SessionCourse.Name} ({SessionCourse.Code})\n{SessionKind} {SessionGroup.Name}\n{Instructor}";
