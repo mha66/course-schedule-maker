@@ -89,6 +89,11 @@ namespace CourseScheduleMaker
                    Code == course.Code;
         }
 
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Name, Code);
+        }
+
         public static bool operator ==(Course? left, Course? right)
         {
             return EqualityComparer<Course>.Default.Equals(left, right);

@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static System.Collections.Specialized.BitVector32;
 
 namespace CourseScheduleMaker
 {
@@ -39,6 +40,15 @@ namespace CourseScheduleMaker
             Courses[0].AddGroup(new Group(1, "08CC05"));
             Courses[0].Groups[0].AddClasses(new GroupClasses(1, Courses[0]));
             Courses[0].Groups[0].Classes[0].AddSessions(new List<Session>(){ new Session(), new Session(1,SessionType.Sec,"John Smith",DayOfWeek.Tuesday, 4)});
+            Courses[0].AddGroup(new Group(2, "06ME03"));
+            Courses[0].Groups[1].AddClasses(new GroupClasses(2, Courses[0]));
+            Courses[0].Groups[1].Classes[0].AddSessions(new List<Session>()
+            {
+                new Session(1, SessionType.Lec,"Jim",DayOfWeek.Wednesday,10),
+                new Session(2, SessionType.Sec, "John Smith", DayOfWeek.Tuesday, 6),
+                new Session(3, SessionType.Lab, "Mark", DayOfWeek.Monday, 4)
+            });
+
             new Course(2, "Physics", "CC456");
             Courses[1].AddGroup(new Group(2, "04EE02"));
             Courses[1].Groups[0].AddClasses(new GroupClasses(2, Courses[1]));
@@ -116,34 +126,61 @@ namespace CourseScheduleMaker
         //gets called when ClassesView changes
         private void ClassesView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            //list[^1] is equivalent to list[list.Count - 1] (last element)
-            GroupClasses? classes = (e.NewItems!.Count != 0)? e.NewItems![^1] as GroupClasses : null;
-            if (e.Action == NotifyCollectionChangedAction.Add && classes != null) 
+            if (e.Action == NotifyCollectionChangedAction.Add) 
             {
-                foreach(Session session in classes!.Sessions)
+                //list[^1] is equivalent to list[list.Count - 1] (last element)
+                GroupClasses? classes = (e.NewItems!.Count != 0) ? e.NewItems![^1] as GroupClasses : null;
+                foreach (Session session in classes!.Sessions)
                 {
                     courseBlocks[((int)session.Day-5+7)%7, session.Period].Text = session.ToString();
+                }
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems != null)
+            {
+                foreach (GroupClasses oldClasses in e.OldItems)
+                {
+                    //if left-hand operand of || evaluates to "true" then right-hand operand isn't evaluated
+                    if(e.NewItems == null || !e.NewItems.Contains(oldClasses)) 
+                    { 
+                        foreach (Session session in oldClasses.Sessions)
+                        {
+                            courseBlocks[((int)session.Day - 5 + 7) % 7, session.Period].Text = "";
+                        }
+                        return;
+                    }
                 }
             }
         }
         private void AddCourseBtn_Click(object sender, RoutedEventArgs e)
         {
-
-            Course? course = coursesComboBox.SelectedItem as Course;
-            Group? group = groupsComboBox.SelectedItem as Group;
-            if (course != null && group != null)
+            try
             {
-                foreach (GroupClasses classes in group.Classes)
+                Course? course = coursesComboBox.SelectedItem as Course;
+                Group? group = groupsComboBox.SelectedItem as Group;
+                if (course != null && group != null)
                 {
-                    if(classes.Course == course)
+                    foreach (GroupClasses viewedClasses in ClassesView!)
                     {
-                        ClassesView!.Add(classes);
-                        break;
+                        if (viewedClasses.Course == course && viewedClasses.Group != group)
+                        {
+                            ClassesView.Remove(viewedClasses);
+                            break;
+                        }
+                        else if (viewedClasses.Course == course && viewedClasses.Group == group)
+                            return;
                     }
+                    foreach (GroupClasses classes in group.Classes)
+                    {
+
+                        if (classes.Course == course)
+                        {
+                            ClassesView!.Add(classes);
+                            break;
+                        }
+                    }
+
                 }
-                            
-            }
-        
+            } catch (Exception ex) {Console.WriteLine(ex.ToString()); }
         }
 
         private void coursesComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
