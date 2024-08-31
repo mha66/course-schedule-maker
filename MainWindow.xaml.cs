@@ -132,7 +132,8 @@ namespace CourseScheduleMaker
                 GroupClasses? classes = (e.NewItems!.Count != 0) ? e.NewItems![^1] as GroupClasses : null;
                 foreach (Session session in classes!.Sessions)
                 {
-                    courseBlocks[((int)session.Day-5+7)%7, session.Period].Text = session.ToString();
+                    int i = ((int)session.Day - 5 + 7) % 7, j = session.Period;
+                    courseBlocks[i, j].Text = (courseBlocks[i, j].Text == "") ? session.ToString() : $"{courseBlocks[i,j].Text}\nXXXXXXXXX\n{session.ToString()}";
                 }
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems != null)
@@ -144,7 +145,8 @@ namespace CourseScheduleMaker
                     { 
                         foreach (Session session in oldClasses.Sessions)
                         {
-                            courseBlocks[((int)session.Day - 5 + 7) % 7, session.Period].Text = "";
+                            int i = ((int)session.Day - 5 + 7) % 7, j = session.Period;
+                            courseBlocks[i, j].Text = "";
                         }
                         return;
                     }
@@ -174,7 +176,7 @@ namespace CourseScheduleMaker
 
                         if (classes.Course == course)
                         {
-                            ClassesView!.Add(classes);
+                            ClassesView.Add(classes);
                             break;
                         }
                     }
