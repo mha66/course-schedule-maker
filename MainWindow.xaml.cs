@@ -124,6 +124,32 @@ namespace CourseScheduleMaker
                 }
         }
 
+        private void RemoveSession(TextBlock sessionTextBlock, string? sessionToRemove)
+        {
+            var Inlines = sessionTextBlock.Inlines;
+            //a clash occurs if there's more than one Inline in the TextBlock
+            if (Inlines.Count > 1)
+            {
+                //index of current inline 
+                int i = 0;
+                foreach (var inline in Inlines)
+                {
+                    var textRange = new TextRange(inline.ContentStart, inline.ContentEnd);
+                    if (textRange.Text == sessionToRemove!.ToString())
+                    {
+                        //Remove Xs (RemoveAt() is missing for some reason) 
+                        Inlines.Remove(Inlines.ElementAt((i == 0) ? 1 : i - 1));
+                        //Remove session info
+                        Inlines.Remove(inline);
+                        break;
+                    }
+                    i++;
+                }
+            }
+            else
+                Inlines.Clear();
+        }
+
         //gets called when ClassesView changes
         private void ClassesView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -134,12 +160,12 @@ namespace CourseScheduleMaker
                 foreach (var session in classes!.Sessions)
                 {
                     int i = ((int)session.Day - 5 + 7) % 7, j = session.Period;
+                    //even-indexed inlines contain session info, odd-indexed ones contain Xs
                     if (courseBlocks[i, j].Inlines.Count != 0)
                     {
                         courseBlocks[i, j].Inlines.Add("\nXXXXXXXXXX\n");
                     }
                     courseBlocks[i, j].Inlines.Add(session.ToString());
-                    //courseBlocks[i, j].Text = (courseBlocks[i, j].Text == "") ? session.ToString() : $"{courseBlocks[i,j].Text}\nXXXXXXXXX\n{session.ToString()}";
                 }
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems != null)
@@ -151,25 +177,8 @@ namespace CourseScheduleMaker
                     { 
                         foreach (var session in oldClasses.Sessions)
                         {
-                            int i = ((int)session.Day - 5 + 7) % 7, j = session.Period;
-                            // courseBlocks[i, j].Text = "";
-                            if (courseBlocks[i, j].Inlines.Count > 1)
-                            {
-                                //RemoveAt() is missing for some reason 
-                                courseBlocks[i, j].Inlines.Remove(courseBlocks[i, j].Inlines.ElementAt(1));
-
-                                foreach (var inline in courseBlocks[i, j].Inlines)
-                                {
-                                    var textRange = new TextRange(inline.ContentStart, inline.ContentEnd);
-                                    if (textRange.Text == session.ToString())
-                                    {
-                                        courseBlocks[i, j].Inlines.Remove(inline);
-                                        break;
-                                    }
-                                }
-                            }
-                            else
-                                courseBlocks[i, j].Inlines.Clear();
+                           int i = ((int)session.Day - 5 + 7) % 7, j = session.Period;
+                           RemoveSession(courseBlocks[i, j], session.ToString());
                         }
                         return;
                     }
