@@ -134,8 +134,8 @@ namespace CourseScheduleMaker
                 int i = 0;
                 foreach (var inline in Inlines)
                 {
-                    var textRange = new TextRange(inline.ContentStart, inline.ContentEnd);
-                    if (textRange.Text == sessionToRemove!.ToString())
+                    var inlineText = new TextRange(inline.ContentStart, inline.ContentEnd);
+                    if (inlineText.Text == sessionToRemove!.ToString())
                     {
                         //Remove Xs (RemoveAt() is missing for some reason) 
                         Inlines.Remove(Inlines.ElementAt((i == 0) ? 1 : i - 1));
