@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static System.Collections.Specialized.BitVector32;
+using System.Collections;
 
 namespace CourseScheduleMaker
 {
@@ -130,10 +131,15 @@ namespace CourseScheduleMaker
             {
                 //list[^1] is equivalent to list[list.Count - 1] (last element)
                 GroupClasses? classes = (e.NewItems!.Count != 0) ? e.NewItems![^1] as GroupClasses : null;
-                foreach (Session session in classes!.Sessions)
+                foreach (var session in classes!.Sessions)
                 {
                     int i = ((int)session.Day - 5 + 7) % 7, j = session.Period;
-                    courseBlocks[i, j].Text = (courseBlocks[i, j].Text == "") ? session.ToString() : $"{courseBlocks[i,j].Text}\nXXXXXXXXX\n{session.ToString()}";
+                    if (courseBlocks[i, j].Inlines.Count != 0)
+                    {
+                        courseBlocks[i, j].Inlines.Add("\nXXXXXXXXXX\n");
+                    }
+                    courseBlocks[i, j].Inlines.Add(session.ToString());
+                    //courseBlocks[i, j].Text = (courseBlocks[i, j].Text == "") ? session.ToString() : $"{courseBlocks[i,j].Text}\nXXXXXXXXX\n{session.ToString()}";
                 }
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems != null)
@@ -143,10 +149,27 @@ namespace CourseScheduleMaker
                     //if left-hand operand of || evaluates to "true" then right-hand operand isn't evaluated
                     if(e.NewItems == null || !e.NewItems.Contains(oldClasses)) 
                     { 
-                        foreach (Session session in oldClasses.Sessions)
+                        foreach (var session in oldClasses.Sessions)
                         {
                             int i = ((int)session.Day - 5 + 7) % 7, j = session.Period;
-                            courseBlocks[i, j].Text = "";
+                            // courseBlocks[i, j].Text = "";
+                            if (courseBlocks[i, j].Inlines.Count > 1)
+                            {
+                                //RemoveAt() is missing for some reason 
+                                courseBlocks[i, j].Inlines.Remove(courseBlocks[i, j].Inlines.ElementAt(1));
+
+                                foreach (var inline in courseBlocks[i, j].Inlines)
+                                {
+                                    var textRange = new TextRange(inline.ContentStart, inline.ContentEnd);
+                                    if (textRange.Text == session.ToString())
+                                    {
+                                        courseBlocks[i, j].Inlines.Remove(inline);
+                                        break;
+                                    }
+                                }
+                            }
+                            else
+                                courseBlocks[i, j].Inlines.Clear();
                         }
                         return;
                     }
