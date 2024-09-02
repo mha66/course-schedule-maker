@@ -39,8 +39,6 @@ namespace CourseScheduleMaker
         public static ObservableCollection<Group> Groups { get; set; } = new ObservableCollection<Group>();
         public static ObservableCollection<GroupClasses> Classes { get; set; } = new ObservableCollection<GroupClasses>();
 
-        //public static Dictionary<string, int> CourseCodeToRow { get; set; } = new Dictionary<string, int>();
-        //public static double[] TitleWidths = new double[4];
         public MainWindow()
         {
            
@@ -74,11 +72,7 @@ namespace CourseScheduleMaker
             ClassesView!.CollectionChanged += ClassesView_CollectionChanged!;
 
 
-            InitializeComponent();
-            //for (int i = 0; i < 4; i++)
-            //{
-            //    TitleWidths[i] = ((addedCourses.Children[0] as StackPanel)!.Children[i] as TextBlock)!.MinWidth;
-            //}
+            InitializeComponent();   
             SetupScheduleGrid();
 
         }
@@ -161,33 +155,6 @@ namespace CourseScheduleMaker
                 Inlines.Clear();
         }
 
-        //private void AddCourseRow(GroupClasses addedCourseClasses)
-        //{
-        //    StackPanel newRow = new StackPanel() {Orientation=Orientation.Horizontal};
-        //    for (int i = 0; i < 4; i++)
-        //    {
-                
-        //        newRow.Children.Add(new TextBlock()
-        //        {
-        //            Text = addedCourseClasses[i],
-        //            Margin = new Thickness(5,0,10,0),
-        //            HorizontalAlignment = HorizontalAlignment.Center,
-        //            //MinWidth = TitleWidths[i]
-        //        });
-        //    }
-        //    addedCourses.Children.Add(newRow);
-        //    DockPanel.SetDock(newRow,Dock.Top);
-        //    int row = addedCourses.Children.Count - 1;
-        //    // TODO: should use id instead of course code
-        //    CourseCodeToRow.Add(addedCourseClasses.Course.Code, row); 
-        //}
-        //private void RemoveCourseRow(GroupClasses addedCourseClasses)
-        //{
-        //    string courseCode = addedCourseClasses.Course.Code;
-        //    addedCourses.Children.RemoveAt(CourseCodeToRow[courseCode]);
-        //    CourseCodeToRow.Remove(courseCode);
-
-        //}
 
 
         //gets called when ClassesView changes
@@ -241,9 +208,8 @@ namespace CourseScheduleMaker
                         if (viewedClasses.Course == course && viewedClasses.Group != group)
                         {
                             ClassesView.Remove(viewedClasses);
-                            //TODO: fix changing the group of a course kicks it to the bottom of the ListView
+                            //TODO: fix a bug where changing the group of a course kicks it to the bottom of the ListView
                             addedCourses.Items.Refresh();
-                            //RemoveCourseRow(viewedClasses);
                             break;
                         }
                         else if (viewedClasses.Course == course && viewedClasses.Group == group)
@@ -256,7 +222,6 @@ namespace CourseScheduleMaker
                         {
                             ClassesView.Add(classes);
                             addedCourses.Items.Refresh();
-                            //AddCourseRow(classes);
                             break;
                         }
                     }

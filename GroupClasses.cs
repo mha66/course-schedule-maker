@@ -15,18 +15,6 @@ namespace CourseScheduleMaker
         public Group Group { get; set; }
        
 
-
-        public string? this[int key]
-        {
-            get
-            {
-                return (key == 0) ? Course.Code
-                    : (key == 1) ? Course.Name
-                    : (key ==2) ? Group.Name
-                    : null;
-            }
-        }
-
        public GroupClasses() : base(-1)
         {
             Course = new Course();
@@ -68,11 +56,6 @@ namespace CourseScheduleMaker
         public void RemoveSession(Session session) 
         {
             Sessions.Remove(session);
-        }
-
-        public override string? ToString()
-        {
-            return $"";
         }
     }
 }
