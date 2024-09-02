@@ -36,6 +36,8 @@ namespace CourseScheduleMaker
         public static ObservableCollection<Course> Courses { get; set; } = new ObservableCollection<Course>();
         public static ObservableCollection<Group> Groups { get; set; } = new ObservableCollection<Group>();
         public static ObservableCollection<GroupClasses> Classes { get; set; } = new ObservableCollection<GroupClasses>();
+
+        public static Dictionary<string, int> CourseCodeToRow { get; set; } = new Dictionary<string, int>(); 
         public MainWindow()
         {
             new Course(1, "Math", "BA232");
@@ -60,7 +62,7 @@ namespace CourseScheduleMaker
                 new Session(2, SessionType.Sec, "Jack Johnson", DayOfWeek.Tuesday, 6),
             });
 
-            //*****find a better place for the following two lines
+            // TODO: find a better place for the following two lines
             GroupsView = new ObservableCollection<Group>(Groups);
             CoursesView = new ObservableCollection<Course>(Courses);
 
@@ -153,16 +155,16 @@ namespace CourseScheduleMaker
 
         private void AddCourseRow(GroupClasses addedCourseClasses)
         {
-            addedCourses.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto});
-            for (int i = 0; i < addedCourses.ColumnDefinitions.Count; i++)
-            {
-                var textBlock = new TextBlock();
-                textBlock.Text = addedCourseClasses[i];
-                addedCourses.Children.Add(textBlock);   
-                Grid.SetRow(textBlock, addedCourses.RowDefinitions.Count - 1);
-                Grid.SetColumn(textBlock, i);
-            }
+            StackPanel newRow = new StackPanel() {Orientation=Orientation.Horizontal};
+            for (int i = 0; i < 4; i++)
+                newRow.Children.Add(new TextBlock() { Text = addedCourseClasses[i], Margin = new Thickness(5) });
+
+            addedCourses.Children.Add(newRow);
+            int row = addedCourses.Children.Count - 1;
+            // TODO: should use id instead of course code
+            CourseCodeToRow.Add(addedCourseClasses.Course.Code, row); 
         }
+      
         //gets called when ClassesView changes
         private void ClassesView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -212,6 +214,7 @@ namespace CourseScheduleMaker
                         if (viewedClasses.Course == course && viewedClasses.Group != group)
                         {
                             ClassesView.Remove(viewedClasses);
+                        
                             break;
                         }
                         else if (viewedClasses.Course == course && viewedClasses.Group == group)
@@ -242,7 +245,7 @@ namespace CourseScheduleMaker
 
         private void groupsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //do something?
+            // TODO: do something?
         }
     }
 }

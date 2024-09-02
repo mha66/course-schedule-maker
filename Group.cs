@@ -33,7 +33,7 @@ namespace CourseScheduleMaker
             Courses.Remove(course);
         }
 
-        //attaches classes to the group and if the classes' course isn't in the list then it will add that course to it***
+        //attaches classes to the group and if the classes' course isn't in the list then it will add that course to it
         //attach classes to group only using this
         public void AddClasses(GroupClasses courseClasses)
         {

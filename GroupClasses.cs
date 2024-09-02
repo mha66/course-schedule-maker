@@ -34,11 +34,10 @@ namespace CourseScheduleMaker
 
         }
 
-        //????
+        //TODO: maybe remove????
         public GroupClasses(int id, Course course) : base(id)
         {
             Course = course;
-
 
         }
         public GroupClasses(int id, Course course, Group classesGroup) : base(id)
