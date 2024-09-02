@@ -18,6 +18,7 @@ using System.Windows.Shapes;
 using static System.Collections.Specialized.BitVector32;
 using System.Collections;
 using static System.Net.Mime.MediaTypeNames;
+using System.Windows.Controls.Primitives;
 
 namespace CourseScheduleMaker
 {
@@ -26,20 +27,23 @@ namespace CourseScheduleMaker
     /// </summary>
     public partial class MainWindow : Window
     {
-        
+
         TextBlock[,] courseBlocks = new TextBlock[7, 17];
         //ViewModel
         public static ObservableCollection<Course>? CoursesView { get; set; }
         public static ObservableCollection<Group>? GroupsView { get; set; }
-        public static ObservableCollection<GroupClasses>? ClassesView { get; set; } = new ObservableCollection<GroupClasses>();
+       //has to be non-static to bind for some reason
+        public ObservableCollection<GroupClasses>? ClassesView { get; set; } = new ObservableCollection<GroupClasses>();
         //DBSource
         public static ObservableCollection<Course> Courses { get; set; } = new ObservableCollection<Course>();
         public static ObservableCollection<Group> Groups { get; set; } = new ObservableCollection<Group>();
         public static ObservableCollection<GroupClasses> Classes { get; set; } = new ObservableCollection<GroupClasses>();
 
-        public static Dictionary<string, int> CourseCodeToRow { get; set; } = new Dictionary<string, int>(); 
+        //public static Dictionary<string, int> CourseCodeToRow { get; set; } = new Dictionary<string, int>();
+        //public static double[] TitleWidths = new double[4];
         public MainWindow()
         {
+           
             new Course(1, "Math", "BA232");
             Courses[0].AddGroup(new Group(1, "08CC05"));
             Courses[0].Groups[0].AddClasses(new GroupClasses(1, Courses[0]));
@@ -71,6 +75,10 @@ namespace CourseScheduleMaker
 
 
             InitializeComponent();
+            //for (int i = 0; i < 4; i++)
+            //{
+            //    TitleWidths[i] = ((addedCourses.Children[0] as StackPanel)!.Children[i] as TextBlock)!.MinWidth;
+            //}
             SetupScheduleGrid();
 
         }
@@ -153,24 +161,35 @@ namespace CourseScheduleMaker
                 Inlines.Clear();
         }
 
-        private void AddCourseRow(GroupClasses addedCourseClasses)
-        {
-            StackPanel newRow = new StackPanel() {Orientation=Orientation.Horizontal};
-            for (int i = 0; i < 4; i++)
-                newRow.Children.Add(new TextBlock() { Text = addedCourseClasses[i], Margin = new Thickness(5) });
+        //private void AddCourseRow(GroupClasses addedCourseClasses)
+        //{
+        //    StackPanel newRow = new StackPanel() {Orientation=Orientation.Horizontal};
+        //    for (int i = 0; i < 4; i++)
+        //    {
+                
+        //        newRow.Children.Add(new TextBlock()
+        //        {
+        //            Text = addedCourseClasses[i],
+        //            Margin = new Thickness(5,0,10,0),
+        //            HorizontalAlignment = HorizontalAlignment.Center,
+        //            //MinWidth = TitleWidths[i]
+        //        });
+        //    }
+        //    addedCourses.Children.Add(newRow);
+        //    DockPanel.SetDock(newRow,Dock.Top);
+        //    int row = addedCourses.Children.Count - 1;
+        //    // TODO: should use id instead of course code
+        //    CourseCodeToRow.Add(addedCourseClasses.Course.Code, row); 
+        //}
+        //private void RemoveCourseRow(GroupClasses addedCourseClasses)
+        //{
+        //    string courseCode = addedCourseClasses.Course.Code;
+        //    addedCourses.Children.RemoveAt(CourseCodeToRow[courseCode]);
+        //    CourseCodeToRow.Remove(courseCode);
 
-            addedCourses.Children.Add(newRow);
-            int row = addedCourses.Children.Count - 1;
-            // TODO: should use id instead of course code
-            CourseCodeToRow.Add(addedCourseClasses.Course.Code, row); 
-        }
-        private void RemoveCourseRow(GroupClasses addedCourseClasses)
-        {
-            string courseCode = addedCourseClasses.Course.Code;
-            addedCourses.Children.RemoveAt(CourseCodeToRow[courseCode]);
-            CourseCodeToRow.Remove(courseCode);
+        //}
 
-        }
+
         //gets called when ClassesView changes
         private void ClassesView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -189,6 +208,7 @@ namespace CourseScheduleMaker
                     }
                     courseBlocks[i, j].Inlines.Add(session.ToString());
                 }
+                
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems != null)
             {
@@ -202,6 +222,7 @@ namespace CourseScheduleMaker
                            int i = ((int)session.Day - 5 + 7) % 7, j = session.Period;
                            RemoveSession(courseBlocks[i, j], session.ToString());
                         }
+                      
                         return;
                     }
                 }
@@ -220,7 +241,9 @@ namespace CourseScheduleMaker
                         if (viewedClasses.Course == course && viewedClasses.Group != group)
                         {
                             ClassesView.Remove(viewedClasses);
-                            RemoveCourseRow(viewedClasses);
+                            //TODO: fix changing the group of a course kicks it to the bottom of the ListView
+                            addedCourses.Items.Refresh();
+                            //RemoveCourseRow(viewedClasses);
                             break;
                         }
                         else if (viewedClasses.Course == course && viewedClasses.Group == group)
@@ -232,7 +255,8 @@ namespace CourseScheduleMaker
                         if (classes.Course == course)
                         {
                             ClassesView.Add(classes);
-                            AddCourseRow(classes);
+                            addedCourses.Items.Refresh();
+                            //AddCourseRow(classes);
                             break;
                         }
                     }

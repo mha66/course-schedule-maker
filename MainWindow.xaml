@@ -51,14 +51,19 @@
                 <Button x:Name="addCourseBtn" Margin="20,0,0,0" Click="AddCourseBtn_Click">Add</Button>
             </StackPanel>
         </DockPanel>
-        <StackPanel x:Name="addedCourses" Grid.Row="1" Grid.Column="0" Orientation="Vertical" Margin="20">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Grid.Column="0" Margin="5">Course Code</TextBlock>
-                <TextBlock Grid.Column="1" Margin="5">Course Name</TextBlock>
-                <TextBlock Grid.Column="2" Margin="5">Group</TextBlock>
-                <TextBlock Grid.Column="3" Margin="5">Remove</TextBlock>
-            </StackPanel>
-        </StackPanel>
+
+        <ListView x:Name="addedCourses" ItemsSource="{Binding ClassesView}" Grid.Row="1" Grid.Column="0" Margin="20">
+            <!--TODO: Center content -->
+            <ListView.View>
+                <GridView AllowsColumnReorder="false" ColumnHeaderToolTip="Course Information" >
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Course.Code}" Header="Course Code" Width="100"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Course.Name}" Header="Course Name" Width="100"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Group.Name}" Header="Group" Width="100"/>
+                    <!-- <GridViewColumn DisplayMemberBinding="{Binding Path=Group.Name}" Header="Group" Width="100"/> -->
+                </GridView>
+            </ListView.View>
+        </ListView>
+
         <Grid x:Name="scheduleGrid" Grid.Row="2" Grid.Column="0" ShowGridLines="True" Margin="0,40,0,0"/>
     </Grid>
 </Window>
