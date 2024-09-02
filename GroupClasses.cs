@@ -13,21 +13,39 @@ namespace CourseScheduleMaker
         public Course Course { get; set; }
         public List<Session> Sessions = new List<Session>(3);
         public Group Group { get; set; }
-        
+       
+
+
+        public string? this[int key]
+        {
+            get
+            {
+                return (key == 0) ? Course.Code
+                    : (key == 1) ? Course.Name
+                    : (key ==2) ? Group.Name
+                    : null;
+            }
+        }
+
        public GroupClasses() : base(-1)
         {
             Course = new Course();
             Group = new Group();
+
         }
 
+        //????
         public GroupClasses(int id, Course course) : base(id)
         {
             Course = course;
+
+
         }
         public GroupClasses(int id, Course course, Group classesGroup) : base(id)
         {
             Course = course;
             classesGroup.AddClasses(this);
+
         }
 
         public void AddSession(Session session)
@@ -51,6 +69,11 @@ namespace CourseScheduleMaker
         public void RemoveSession(Session session) 
         {
             Sessions.Remove(session);
+        }
+
+        public override string? ToString()
+        {
+            return $"";
         }
     }
 }

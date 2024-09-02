@@ -17,6 +17,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static System.Collections.Specialized.BitVector32;
 using System.Collections;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace CourseScheduleMaker
 {
@@ -150,6 +151,18 @@ namespace CourseScheduleMaker
                 Inlines.Clear();
         }
 
+        private void AddCourseRow(GroupClasses addedCourseClasses)
+        {
+            addedCourses.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto});
+            for (int i = 0; i < addedCourses.ColumnDefinitions.Count; i++)
+            {
+                var textBlock = new TextBlock();
+                textBlock.Text = addedCourseClasses[i];
+                addedCourses.Children.Add(textBlock);   
+                Grid.SetRow(textBlock, addedCourses.RowDefinitions.Count - 1);
+                Grid.SetColumn(textBlock, i);
+            }
+        }
         //gets called when ClassesView changes
         private void ClassesView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -157,6 +170,7 @@ namespace CourseScheduleMaker
             {
                 //list[^1] is equivalent to list[list.Count - 1] (last element)
                 GroupClasses? classes = (e.NewItems!.Count != 0) ? e.NewItems![^1] as GroupClasses : null;
+                
                 foreach (var session in classes!.Sessions)
                 {
                     int i = ((int)session.Day - 5 + 7) % 7, j = session.Period;
@@ -209,6 +223,7 @@ namespace CourseScheduleMaker
                         if (classes.Course == course)
                         {
                             ClassesView.Add(classes);
+                            AddCourseRow(classes);
                             break;
                         }
                     }
