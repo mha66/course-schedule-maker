@@ -164,7 +164,13 @@ namespace CourseScheduleMaker
             // TODO: should use id instead of course code
             CourseCodeToRow.Add(addedCourseClasses.Course.Code, row); 
         }
-      
+        private void RemoveCourseRow(GroupClasses addedCourseClasses)
+        {
+            string courseCode = addedCourseClasses.Course.Code;
+            addedCourses.Children.RemoveAt(CourseCodeToRow[courseCode]);
+            CourseCodeToRow.Remove(courseCode);
+
+        }
         //gets called when ClassesView changes
         private void ClassesView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -214,7 +220,7 @@ namespace CourseScheduleMaker
                         if (viewedClasses.Course == course && viewedClasses.Group != group)
                         {
                             ClassesView.Remove(viewedClasses);
-                        
+                            RemoveCourseRow(viewedClasses);
                             break;
                         }
                         else if (viewedClasses.Course == course && viewedClasses.Group == group)
