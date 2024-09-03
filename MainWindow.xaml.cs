@@ -32,7 +32,7 @@ namespace CourseScheduleMaker
         //ViewModel
         public static ObservableCollection<Course>? CoursesView { get; set; }
         public static ObservableCollection<Group>? GroupsView { get; set; }
-       //has to be non-static to bind for some reason
+        //has to be non-static to bind for some reason
         public ObservableCollection<GroupClasses>? ClassesView { get; set; } = new ObservableCollection<GroupClasses>();
         //DBSource
         public static ObservableCollection<Course> Courses { get; set; } = new ObservableCollection<Course>();
@@ -41,11 +41,11 @@ namespace CourseScheduleMaker
 
         public MainWindow()
         {
-           
+
             new Course(1, "Math", "BA232");
             Courses[0].AddGroup(new Group(1, "08CC05"));
             Courses[0].Groups[0].AddClasses(new GroupClasses(1, Courses[0]));
-            Courses[0].Groups[0].Classes[0].AddSessions(new List<Session>(){ new Session(), new Session(1,SessionType.Sec,"John Smith",DayOfWeek.Tuesday, 4)});
+            Courses[0].Groups[0].Classes[0].AddSessions(new List<Session>() { new Session(), new Session(1, SessionType.Sec, "John Smith", DayOfWeek.Tuesday, 4) });
             Courses[0].AddGroup(new Group(2, "06ME03"));
             Courses[0].Groups[1].AddClasses(new GroupClasses(2, Courses[0]));
             Courses[0].Groups[1].Classes[0].AddSessions(new List<Session>()
@@ -58,7 +58,7 @@ namespace CourseScheduleMaker
             new Course(2, "Physics", "CC456");
             Courses[1].AddGroup(new Group(2, "04EE02"));
             Courses[1].Groups[0].AddClasses(new GroupClasses(2, Courses[1]));
-            Courses[1].Groups[0].Classes[0].AddSessions(new List<Session>() 
+            Courses[1].Groups[0].Classes[0].AddSessions(new List<Session>()
             {
                 new Session(1, SessionType.Lec, "Mark Roberts", DayOfWeek.Thursday, 2),
                 new Session(2, SessionType.Sec, "Jack Johnson", DayOfWeek.Tuesday, 6),
@@ -72,21 +72,21 @@ namespace CourseScheduleMaker
             ClassesView!.CollectionChanged += ClassesView_CollectionChanged!;
 
 
-            InitializeComponent();   
+            InitializeComponent();
             SetupScheduleGrid();
 
         }
-       
+
         private void SetupScheduleGrid()
         {
             //adds row and column definitions
             for (int i = 0; i < 18; i++)
             {
                 scheduleGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
-                if(i<8)
+                if (i < 8)
                     scheduleGrid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
             }
-            
+
             //adds titles for each row and column
             scheduleGrid.Children.Add(new TextBlock() { Text = "Days/Period" });
             for (int i = 0; i <= 16; i++)
@@ -103,11 +103,11 @@ namespace CourseScheduleMaker
                     scheduleGrid.Children.Add(dayTB);
                 }
             }
-            
+
             //adds empty textblocks(????) for courses to be added
-            for(int i=0; i<7; i++)
+            for (int i = 0; i < 7; i++)
             {
-                for(int j=0; j<17; j++)
+                for (int j = 0; j < 17; j++)
                 {
                     courseBlocks[i, j] = new TextBlock();
                 }
@@ -124,7 +124,7 @@ namespace CourseScheduleMaker
                     TextBlock tb = courseBlocks[i, j];
                     Grid.SetRow(tb, i + 1);
                     Grid.SetColumn(tb, j + 1);
-                    if(!scheduleGrid.Children.Contains(tb)) //???
+                    if (!scheduleGrid.Children.Contains(tb)) //???
                         scheduleGrid.Children.Add(tb);
                 }
         }
@@ -160,11 +160,11 @@ namespace CourseScheduleMaker
         //gets called when ClassesView changes
         private void ClassesView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action == NotifyCollectionChangedAction.Add) 
+            if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 //list[^1] is equivalent to list[list.Count - 1] (last element)
                 GroupClasses? classes = (e.NewItems!.Count != 0) ? e.NewItems![^1] as GroupClasses : null;
-                
+
                 foreach (var session in classes!.Sessions)
                 {
                     int i = ((int)session.Day - 5 + 7) % 7, j = session.Period;
@@ -175,26 +175,27 @@ namespace CourseScheduleMaker
                     }
                     courseBlocks[i, j].Inlines.Add(session.ToString());
                 }
-                
+
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems != null)
             {
                 foreach (GroupClasses oldClasses in e.OldItems)
                 {
                     //if left-hand operand of || evaluates to "true" then right-hand operand isn't evaluated
-                    if(e.NewItems == null || !e.NewItems.Contains(oldClasses)) 
-                    { 
+                    if (e.NewItems == null || !e.NewItems.Contains(oldClasses))
+                    {
                         foreach (var session in oldClasses.Sessions)
                         {
-                           int i = ((int)session.Day - 5 + 7) % 7, j = session.Period;
-                           RemoveSession(courseBlocks[i, j], session.ToString());
+                            int i = ((int)session.Day - 5 + 7) % 7, j = session.Period;
+                            RemoveSession(courseBlocks[i, j], session.ToString());
                         }
-                      
+
                         return;
                     }
                 }
             }
         }
+
         private void AddCourseBtn_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -227,14 +228,15 @@ namespace CourseScheduleMaker
                     }
 
                 }
-            } catch (Exception ex) {Console.WriteLine(ex.ToString()); }
+            }
+            catch (Exception ex) { Console.WriteLine(ex.ToString()); }
         }
 
         private void coursesComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Course c = (Course) coursesComboBox.SelectedItem;
+            Course c = (Course)coursesComboBox.SelectedItem;
             GroupsView!.Clear();
-            foreach(Group g in c.Groups)
+            foreach (Group g in c.Groups)
                 GroupsView.Add(g);
         }
 
@@ -245,7 +247,7 @@ namespace CourseScheduleMaker
 
         private void RemoveCourseBtn_Click(object sender, RoutedEventArgs e)
         {
-           
+
             Button button = (sender as Button)!;
             foreach (var classes in ClassesView!)
             {
@@ -255,6 +257,12 @@ namespace CourseScheduleMaker
                     break;
                 }
             }
+
+        }
+
+        private void CourseGroups_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
 
         }
     }

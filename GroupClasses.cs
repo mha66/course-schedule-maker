@@ -35,6 +35,7 @@ namespace CourseScheduleMaker
 
         }
 
+
         public void AddSession(Session session)
         {
             Sessions.Add(session);
