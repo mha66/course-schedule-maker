@@ -242,5 +242,20 @@ namespace CourseScheduleMaker
         {
             // TODO: do something?
         }
+
+        private void RemoveCourseBtn_Click(object sender, RoutedEventArgs e)
+        {
+           
+            Button button = (sender as Button)!;
+            foreach (var classes in ClassesView!)
+            {
+                if (classes.Course.Code == button.Tag.ToString())
+                {
+                    ClassesView.Remove(classes);
+                    break;
+                }
+            }
+
+        }
     }
 }

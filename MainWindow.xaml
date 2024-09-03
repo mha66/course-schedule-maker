@@ -55,15 +55,23 @@
         <ListView x:Name="addedCourses" ItemsSource="{Binding ClassesView}" Grid.Row="1" Grid.Column="0" Margin="20">
             <!--TODO: Center content -->
             <ListView.View>
-                <GridView AllowsColumnReorder="false" ColumnHeaderToolTip="Course Information" >
+                <GridView AllowsColumnReorder="false" ColumnHeaderToolTip="Course Information">
                     <GridViewColumn DisplayMemberBinding="{Binding Path=Course.Code}" Header="Course Code" Width="100"/>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=Course.Name}" Header="Course Name" Width="100"/>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=Group.Name}" Header="Group" Width="100"/>
-                    <!-- <GridViewColumn DisplayMemberBinding="{Binding Path=Group.Name}" Header="Group" Width="100"/> -->
+                    <GridViewColumn Header="Remove" Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <!--TODO: should bind Tag to Course.Id -->
+                                <Button x:Name="removeCourseBtn" Tag="{Binding Course.Code}" Click="RemoveCourseBtn_Click" >X</Button>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn> 
                 </GridView>
             </ListView.View>
         </ListView>
 
+        <!--TODO: create row and column headers in xaml instead of using code-->
         <Grid x:Name="scheduleGrid" Grid.Row="2" Grid.Column="0" ShowGridLines="True" Margin="0,40,0,0"/>
     </Grid>
 </Window>
