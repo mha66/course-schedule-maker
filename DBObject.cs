@@ -28,6 +28,12 @@ namespace CourseScheduleMaker
             Name = name ?? throw new ArgumentNullException(nameof(name));
         }
 
+        public DBObject(DBObject dbObject)
+        {
+            Id = dbObject.Id;
+            Name = dbObject.Name ?? throw new ArgumentNullException(nameof(dbObject.Name));
+        }
+
         public override string? ToString()
         {
             return $"ID:{Id}, Name:{Name}";

@@ -16,6 +16,7 @@ namespace CourseScheduleMaker
 
         // *****type could just be List<Group>
         public ObservableCollection<Group> Groups { get; set; } = new ObservableCollection<Group>();
+        public ObservableCollection<GroupClasses> Classes { get; set; } = new ObservableCollection<GroupClasses>();
         public List<string> Professors { get; set; } = new List<string>();
         public List<string> TAs { get; set; } = new List<string>();
 
@@ -45,6 +46,15 @@ namespace CourseScheduleMaker
 
 
         //attach group to course only using this
+        public void AddClasses(GroupClasses classes)
+        {
+            Classes.Add(classes);
+        }
+
+        public void RemoveClasses(GroupClasses classes)
+        {
+            Classes.Remove(classes);
+        }
         public void AddGroup(Group group)
         {
             Groups.Add(group);
