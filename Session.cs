@@ -4,17 +4,18 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace CourseScheduleMaker
 {
     public enum SessionType
     {
-        [Description("Lecture")]
-        Lec,
-        [Description("Section")]
-        Sec,
-        [Description("Laboratory")]
-        Lab
+        [Description("Lecture"), XmlEnum("Lecture")]
+        Lec = 0,
+        [Description("Section"), XmlEnum("Section")]
+        Sec = 1,
+        [Description("Laboratory"), XmlEnum("Lecture")]
+        Lab = 2
     }
     public class Session : DBObject
     {

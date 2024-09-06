@@ -4,10 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CourseScheduleMaker"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib" 
         mc:Ignorable="d"
         Title="CreateClassesWindow" Height="450" Width="800">
-    <Grid HorizontalAlignment="Center">
+    <Window.Resources>
+   
+    </Window.Resources>
+    <Grid HorizontalAlignment="Center" x:Name="creationGrid">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -31,7 +36,10 @@
         </StackPanel>
         <StackPanel Margin="0,5,10,0" Grid.Row="1" Grid.Column="1">
             <TextBlock>Number of sessions:</TextBlock>
-            <ComboBox x:Name="sessionsNum" Margin="0,5,0,0">
+            <ComboBox x:Name="sessionsNum" Margin="0,5,0,0" SelectedIndex="1" 
+                      SelectionChanged="SessionsNum_SelectionChanged"
+                      Loaded="SessionsNum_Loaded"
+                      SelectedValuePath="Content" >
                 <ComboBoxItem Content="1"/>
                 <ComboBoxItem Content="2"/>
                 <ComboBoxItem Content="3"/>
