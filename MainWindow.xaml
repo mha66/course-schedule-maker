@@ -49,6 +49,7 @@
                           ItemsSource="{Binding Path=GroupsView}"
                           SelectionChanged="groupsComboBox_SelectionChanged"/>
                 <Button x:Name="addCourseBtn" Margin="20,0,0,0" Click="AddCourseBtn_Click">Add</Button>
+                <Button x:Name="createCourseBtn" Margin="20,0,0,0" Click="CreateCourseBtn_Click">Create</Button>
             </StackPanel>
         </DockPanel>
 

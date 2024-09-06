@@ -320,6 +320,12 @@ namespace CourseScheduleMaker
             }
         }
 
+        private void CreateCourseBtn_Click(object sender, RoutedEventArgs e)
+        {
+            var createClassesWindow = new CreateClassesWindow();
+            createClassesWindow.Show();
+        }
+
         /*private void CourseGroups_Loaded(object sender, RoutedEventArgs e)
         {
             var comboBox = sender as ComboBox;
