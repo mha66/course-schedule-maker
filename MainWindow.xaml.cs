@@ -255,6 +255,31 @@ namespace CourseScheduleMaker
             // TODO: do something?
         }
 
+        private void CourseGroups_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //TODO: Fix visual bug where selected item in combobox isnt the selected group
+            GroupClasses? newClasses = (sender as ComboBox)!.Tag as GroupClasses;
+            foreach (GroupClasses classes in ClassesView!)
+            {
+                if (classes.Course == newClasses!.Course)
+                {
+                    ClassesView.Remove(classes);
+                    addedCourses.Items.Refresh();
+                    break;
+                }
+            }
+
+            foreach (GroupClasses classes in newClasses!.Group.Classes)
+            {
+                if (classes.Course.Code == newClasses.Course.Code)
+                {
+                    ClassesView.Add(classes);
+                    addedCourses.Items.Refresh();
+                    break;
+                }
+            }
+
+        }
         private void RemoveCourseBtn_Click(object sender, RoutedEventArgs e)
         {
 
@@ -272,7 +297,7 @@ namespace CourseScheduleMaker
 
         private void ModifyCourseBtn_Click(object sender, RoutedEventArgs e)
         {
-            //TODO: Fix visual bug where selected item in combobox isnt the new group
+            //TODO: Fix visual bug where selected item in combobox isnt the selected group
             GroupClasses? newClasses = (sender as Button)!.Tag as GroupClasses;
             foreach (GroupClasses classes in ClassesView!)
             {
@@ -294,92 +319,13 @@ namespace CourseScheduleMaker
                 }
             }
         }
+
+        /*private void CourseGroups_Loaded(object sender, RoutedEventArgs e)
+        {
+            var comboBox = sender as ComboBox;
+            comboBox.SelectedItem = (comboBox.Tag as GroupClasses).Group;
+            
+        }*/
+
     }
 }
-
-//GARBAGE
-//private void CourseGroups_SelectionChanged(object sender, SelectionChangedEventArgs e)
-//{
-//    //TODO: ?????????????????????????????????
-//    ClassesView? newClasses = (sender as ComboBox)!.Tag as ClassesView;
-//    newClasses.Group = (sender as ComboBox)!.SelectedItem as Group;
-
-//    /*
-//    //addedCourses.Items.Refresh();
-//    //ClassesView newClasses = ((sender as ComboBox)!.Tag as ClassesView)!;
-//    Group? group = (sender as ComboBox)!.SelectedItem as Group;
-
-//    if (group != null)
-//    {
-//        foreach (ClassesView viewedClasses in ClassesView!)
-//        {
-//            MessageBox.Show(viewedClasses.Group.Name);
-//            if (viewedClasses.Course.Code == (sender as ComboBox)!.Tag.ToString() && viewedClasses.Group != group)
-//            {
-//                MessageBox.Show("y1");
-//                ClassesView.Remove(viewedClasses);
-//                //TODO: fix a bug where changing the group of a course kicks it to the bottom of the ListView
-//                addedCourses.Items.Refresh();
-//                break;
-//            }
-//            //else if (viewedClasses.Course == newClasses.Course && viewedClasses.Group == group)
-//            //{
-//            //    MessageBox.Show("y2");
-//            //    return;
-//            //}
-//        }
-//        foreach (ClassesView classes in group.Classes)
-//        {
-
-//            if (classes.Course.Code == (sender as ComboBox)!.Tag.ToString())
-//            {
-//                MessageBox.Show("y3");
-//                ClassesView.Add(classes);
-//                //MessageBox.Show(newClasses.ToString());
-//                addedCourses.Items.Refresh();
-//                break;
-//            }
-//        }
-
-//    }*/
-
-//    //ComboBox comboBox = (sender as ComboBox)!;
-//    //ClassesView? newClasses = comboBox.Tag as ClassesView;
-//    //foreach (ClassesView classes in Classes)
-//    //{
-//    //    MessageBox.Show(classes.Group.Name);
-//    //    if (classes.Group.Name == e.RemovedItems[0]!.ToString())
-//    //    {
-
-//    //        ClassesView!.Remove(classes);
-//    //        addedCourses.Items.Refresh();
-//    //        break;
-//    //    }
-//    //}
-//    //ClassesView!.Add(newClasses!);
-//    //addedCourses.Items.Refresh();
-
-
-
-
-
-
-
-
-//    // MessageBox.Show((comboBox.Tag == null) ? comboBox.ToString() : comboBox.Tag.ToString() + '\n' + e.RemovedItems[0].ToString());
-
-//    //addedClasses!.Group = (Group)comboBox.SelectedItem;
-
-//    //if (course != null && group != null)
-//    //{
-
-//    //    ClassesView.Remove(viewedClasses);
-//    //    //TODO: fix a bug where changing the group of a course kicks it to the bottom of the ListView
-//    //    addedCourses.Items.Refresh();
-
-//    //    ClassesView.Add(classes);
-//    //    addedCourses.Items.Refresh();
-
-//    //}
-
-//}

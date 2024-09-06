@@ -57,5 +57,17 @@ namespace CourseScheduleMaker
         {
             return Name;
         }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is Group group &&
+                   Id == group.Id &&
+                   Name == group.Name;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Name);
+        }
     }
 }
