@@ -23,19 +23,19 @@ namespace CourseScheduleMaker
         
         public Course() : base(-1, "EXCOURSE")
         {
-            MainWindow.Courses.Add(this);
+            ExistingOrNew(this);
             Code = "EX123";
         }
 
         public Course(int id, string name, string code) : base(id, name)
         {
-            MainWindow.Courses.Add(this);
+            ExistingOrNew(this);
             Code = code ?? throw new ArgumentNullException(nameof(code));
         }
 
         public Course(int id, string name, string code, ObservableCollection<Group> groups, List<string> professors, List<string> tas)
         {
-            MainWindow.Courses.Add(this);
+            ExistingOrNew(this);
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Code = code ?? throw new ArgumentNullException(nameof(code));
@@ -44,6 +44,16 @@ namespace CourseScheduleMaker
             TAs = tas ?? throw new ArgumentNullException(nameof(tas));
         }
 
+        public static Course ExistingOrNew(Course course)
+        {
+            foreach (var existingCourse in MainWindow.Courses)
+            {
+                if(existingCourse == course)
+                    return existingCourse;
+            }
+            MainWindow.Courses.Add(course); 
+            return course;
+        }
 
         //attach group to course only using this
         public void AddClasses(GroupClasses classes)

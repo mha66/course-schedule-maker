@@ -21,6 +21,11 @@ namespace CourseScheduleMaker
     public partial class SessionTextBoxes : UserControl
     {
         public static int Count { get; set; } = 0;
+
+        public SessionType SessionKind { get => (SessionType)sessionClassification.SelectedItem; }
+        public string Instructor { get => sessionInstructor.Text; }
+        public DayOfWeek Day { get => (DayOfWeek)sessionDay.SelectedItem; }
+        public int Period { get => (int)sessionPeriod.SelectedItem; }
         public SessionTextBoxes()
         {
             InitializeComponent();

@@ -39,6 +39,11 @@ namespace CourseScheduleMaker
         public static ObservableCollection<Group> Groups { get; set; } = new ObservableCollection<Group>();
         public static ObservableCollection<GroupClasses> Classes { get; set; } = new ObservableCollection<GroupClasses>();
 
+        public static void UpdateCourseGroupViews()
+        {
+            GroupsView!.Add(Groups[^1]);
+            CoursesView!.Add(Courses[^1]);
+        }
         public MainWindow()
         {
 
@@ -46,8 +51,8 @@ namespace CourseScheduleMaker
             Courses[0].AddGroup(new Group(1, "08CC05"));
             Courses[0].Groups[0].AddClasses(new GroupClasses(1, Courses[0]));
             Courses[0].Groups[0].Classes[0].AddSessions(new List<Session>() { new Session(), new Session(1, SessionType.Sec, "John Smith", DayOfWeek.Tuesday, 4) });
-            Courses[0].AddGroup(new Group(2, "06ME03"));
-            Courses[0].Groups[1].AddClasses(new GroupClasses(2, Courses[0]));
+            Courses[0].AddGroup(new Group(1, "06ME03"));
+            Courses[0].Groups[1].AddClasses(new GroupClasses(1, Courses[0]));
             Courses[0].Groups[1].Classes[0].AddSessions(new List<Session>()
             {
                 new Session(1, SessionType.Lec,"Jim",DayOfWeek.Wednesday,10),
@@ -56,8 +61,8 @@ namespace CourseScheduleMaker
             });
 
             new Course(2, "Physics", "CC456");
-            Courses[1].AddGroup(new Group(2, "04EE02"));
-            Courses[1].Groups[0].AddClasses(new GroupClasses(2, Courses[1]));
+            Courses[1].AddGroup(new Group(1, "04EE02"));
+            Courses[1].Groups[0].AddClasses(new GroupClasses(1, Courses[1]));
             Courses[1].Groups[0].Classes[0].AddSessions(new List<Session>()
             {
                 new Session(1, SessionType.Lec, "Mark Roberts", DayOfWeek.Thursday, 2),

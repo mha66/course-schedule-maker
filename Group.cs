@@ -16,14 +16,25 @@ namespace CourseScheduleMaker
         public Group() : base(-1, "EXGROUP") { MainWindow.Groups.Add(this); }
         public Group(int id, string name) : base(id, name)
         {
-            MainWindow.Groups.Add(this);
+            ExistingOrNew(this);
         }
         public Group(int id, string name, Course initialCourse) : base(id, name)
         {
             initialCourse.AddGroup(this);
-            MainWindow.Groups.Add(this);
+            ExistingOrNew(this);
         }
 
+
+        public static Group ExistingOrNew(Group group)
+        {
+            foreach (var existingGroup in MainWindow.Groups)
+            {
+                if (existingGroup == group)
+                    return existingGroup;
+            }
+            MainWindow.Groups.Add(group);
+            return group;
+        }
         public void AddCourse(Course course)
         {
             Courses.Add(course); 

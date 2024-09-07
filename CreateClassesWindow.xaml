@@ -16,9 +16,9 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
@@ -45,5 +45,7 @@
                 <ComboBoxItem Content="4"/>
             </ComboBox>
         </StackPanel>
+        <Button x:Name="createCourseBtn" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" 
+                Margin="30" x:Uid="createBtn" Click="CreateCourseBtn_Click">Create</Button>
     </Grid>
 </Window>
