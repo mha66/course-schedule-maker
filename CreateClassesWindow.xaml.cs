@@ -17,9 +17,12 @@ namespace CourseScheduleMaker
     /// <summary>
     /// Interaction logic for CreateClassesWindow.xaml
     /// </summary>
+    /// 
+
+    //TODO: add feat to fill all textboxes with last made course info
     public partial class CreateClassesWindow : Window
     {
-        public SessionType SessionKind { get; set; } = SessionType.Lec;
+        //public SessionType SessionKind { get; set; } = SessionType.Lec;
         public CreateClassesWindow()
         {
             InitializeComponent();
@@ -31,12 +34,6 @@ namespace CourseScheduleMaker
             int oldCount = SessionTextBoxes.Count, newCount = 0;
             newCount = int.Parse(comboBox.SelectedValue.ToString()!);
 
-            //foreach (UIElement child in creationGrid.Children)
-            //{
-            //    if (child is SessionTextBoxes)
-            //        oldCount++;
-            //}
-           // MessageBox.Show($"old: {oldCount} new: {newCount}");
             if (oldCount < newCount)
             {
                 while (oldCount != newCount)
@@ -52,39 +49,15 @@ namespace CourseScheduleMaker
             }
             else if (oldCount > newCount)
             {
+
                 while (oldCount != newCount)
                 {
-                    for (int i = creationGrid.Children.Count - 1; i >= 0; i--)
-                    {
-                        //MessageBox.Show(creationGrid.Children.IndexOf(child).ToString());
-                        if (creationGrid.Children[i] is SessionTextBoxes)
-                        {
-                            //TODO: fix a bug where remove doesn't work sometimes
-                            creationGrid.Children.Remove(creationGrid.Children[i]);
-                           // MessageBox.Show("HIT");
-                            SessionTextBoxes.Count--;
-                            oldCount--;
-                            break;
-                        }
-                    }
+                    creationGrid.Children.RemoveAt(creationGrid.Children.Count - 1 );
+                    SessionTextBoxes.Count--;
+                    oldCount--;
                 }
-            }
-        }
 
-        private void SessionsNum_Loaded(object sender, RoutedEventArgs e)
-        {
-            ComboBox comboBox = (sender as ComboBox)!;
-            int newCount = int.Parse(comboBox.SelectedValue.ToString()!);
-            for (int i = 1; i <= newCount; i++)
-            {
-                {
-                    var newSessionBoxes = new SessionTextBoxes();
-                    creationGrid.Children.Add(newSessionBoxes);
-                    Grid.SetRow(newSessionBoxes, (i < 3) ? 2 : 3);
-                    Grid.SetColumn(newSessionBoxes, (i + 1) % 2);
-                }
             }
-            SessionTextBoxes.Count = newCount;
         }
     }
 }

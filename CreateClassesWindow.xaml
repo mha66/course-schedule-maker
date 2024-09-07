@@ -38,7 +38,6 @@
             <TextBlock>Number of sessions:</TextBlock>
             <ComboBox x:Name="sessionsNum" Margin="0,5,0,0" SelectedIndex="1" 
                       SelectionChanged="SessionsNum_SelectionChanged"
-                      Loaded="SessionsNum_Loaded"
                       SelectedValuePath="Content" >
                 <ComboBoxItem Content="1"/>
                 <ComboBoxItem Content="2"/>
