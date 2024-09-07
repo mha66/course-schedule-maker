@@ -262,7 +262,6 @@ namespace CourseScheduleMaker
 
         private void CourseGroups_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //TODO: Fix visual bug where selected item in combobox isnt the selected group
             GroupClasses? newClasses = (sender as ComboBox)!.Tag as GroupClasses;
             foreach (GroupClasses classes in ClassesView!)
             {
@@ -283,7 +282,6 @@ namespace CourseScheduleMaker
                     break;
                 }
             }
-
         }
         private void RemoveCourseBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -302,7 +300,6 @@ namespace CourseScheduleMaker
 
         private void ModifyCourseBtn_Click(object sender, RoutedEventArgs e)
         {
-            //TODO: Fix visual bug where selected item in combobox isnt the selected group
             GroupClasses? newClasses = (sender as Button)!.Tag as GroupClasses;
             foreach (GroupClasses classes in ClassesView!)
             {

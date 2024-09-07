@@ -62,7 +62,8 @@
                     <GridViewColumn Header="Group" Width="100">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <ComboBox x:Name="courseGroups" SelectionChanged="CourseGroups_SelectionChanged"
+                                <ComboBox x:Name="courseGroups" SelectionChanged="CourseGroups_SelectionChanged" 
+                                          IsSynchronizedWithCurrentItem="True"
                                           Tag="{Binding}"
                                           ItemTemplate="{StaticResource groupNameTemplate}" 
                                           ItemsSource="{Binding Course.Groups}" 
@@ -81,7 +82,6 @@
                     <GridViewColumn Header="Modify" Width="100">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <!--TODO: should bind Tag to Course.Id -->
                                 <Button x:Name="modifyCourseBtn" Tag="{Binding}" Click="ModifyCourseBtn_Click">M</Button>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
