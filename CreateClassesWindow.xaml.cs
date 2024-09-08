@@ -56,8 +56,9 @@ namespace CourseScheduleMaker
                 while (oldCount != newCount)
                 {
                     int childrenCount = creationGrid.Children.Count;
+                    //to avoid removing the Create button
                     creationGrid.Children.RemoveAt(
-                        (creationGrid.Children[childrenCount - 1].Uid == "createBtn") ? childrenCount - 2: childrenCount - 1);
+                        (creationGrid.Children[childrenCount - 1].Uid == "createBtn") ? childrenCount - 2 : childrenCount - 1);
                     SessionBoxes.RemoveAt(SessionBoxes.Count - 1);
                     SessionTextBoxes.Count--;
                     oldCount--;
@@ -73,7 +74,6 @@ namespace CourseScheduleMaker
             GroupClasses classes = new GroupClasses(1, course, group);
             foreach (SessionTextBoxes sessionBox in SessionBoxes)
             {
-                MessageBox.Show("HELL");
                 classes.AddSession(new Session(1, sessionBox.SessionKind, sessionBox.Instructor, 
                     sessionBox.Day, sessionBox.Period));
             }

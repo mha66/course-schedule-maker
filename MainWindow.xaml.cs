@@ -240,7 +240,6 @@ namespace CourseScheduleMaker
                         }
                     }
                    
-                    //TODO: fix a bug where changing the group of a course kicks it to the bottom of the ListView
                     addedCourses.Items.Refresh();
                 }
             }
@@ -262,11 +261,14 @@ namespace CourseScheduleMaker
 
         private void CourseGroups_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+
+            int pos = ClassesView!.Count - 1;
             GroupClasses? newClasses = (sender as ComboBox)!.Tag as GroupClasses;
             foreach (GroupClasses classes in ClassesView!)
             {
                 if (classes.Course == newClasses!.Course)
                 {
+                    pos = ClassesView.IndexOf(classes);
                     ClassesView.Remove(classes);
                     addedCourses.Items.Refresh();
                     break;
@@ -277,7 +279,7 @@ namespace CourseScheduleMaker
             {
                 if (classes.Course.Code == newClasses.Course.Code)
                 {
-                    ClassesView.Add(classes);
+                    ClassesView.Insert(pos, classes);
                     addedCourses.Items.Refresh();
                     break;
                 }
@@ -298,15 +300,20 @@ namespace CourseScheduleMaker
         }
        
 
+        //TODO: remove modify button
         private void ModifyCourseBtn_Click(object sender, RoutedEventArgs e)
         {
+            
             GroupClasses? newClasses = (sender as Button)!.Tag as GroupClasses;
             foreach (GroupClasses classes in ClassesView!)
             {
                 if (classes.Course == newClasses!.Course)
                 {
                     ClassesView.Remove(classes);
+                   
                     addedCourses.Items.Refresh();
+
+
                     break;
                 }
             }
@@ -316,6 +323,7 @@ namespace CourseScheduleMaker
                 if (classes.Course.Code == newClasses.Course.Code)
                 {
                     ClassesView.Add(classes);
+                   
                     addedCourses.Items.Refresh();
                     break;
                 }
