@@ -78,6 +78,7 @@ namespace CourseScheduleMaker
                     sessionBox.Day, sessionBox.Period));
             }
             MainWindow.UpdateCourseGroupViews();
+            MessageBox.Show("courses and groups are updated!");
         }
     }
 }
