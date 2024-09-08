@@ -11,7 +11,7 @@ namespace CourseScheduleMaker
     {
  
         public ObservableCollection<Course> Courses { get; set; } = new ObservableCollection<Course>();
-        public List<GroupClasses> Classes { get; set; } = new List<GroupClasses>();
+        public List<Class> Classes { get; set; } = new List<Class>();
 
         public Group() : base(-1, "EXGROUP") { MainWindow.Groups.Add(this); }
         public Group(int id, string name) : base(id, name)
@@ -46,7 +46,7 @@ namespace CourseScheduleMaker
 
         //attaches classes to the group and if the classes' course isn't in the list then it will add that course to it
         //attach classes to group only using this
-        public void AddClasses(GroupClasses courseClasses)
+        public void AddClasses(Class courseClasses)
         {
             Classes.Add(courseClasses);
             courseClasses.Group = this;
@@ -59,7 +59,7 @@ namespace CourseScheduleMaker
         }
 
         //***
-        public void RemoveClasses(GroupClasses courseClasses)
+        public void RemoveClasses(Class courseClasses)
         {
             Classes.Remove(courseClasses);
         }

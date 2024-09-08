@@ -19,18 +19,18 @@ namespace CourseScheduleMaker
     }
     public class Session : DBObject
     {
-        public override string Name { get => $"{SessionClasses.Name} {SessionKind}"; }
-        public Course SessionCourse { get; set; }
-        public Group SessionGroup { get; set; }
-        public GroupClasses SessionClasses { get; set; }
-        public SessionType SessionKind { get; set; }
+        public override string Name { get => $"{Class.Name} {Kind}"; }
+        public Course Course { get; set; }
+        public Group Group { get; set; }
+        public Class Class { get; set; }
+        public SessionType Kind { get; set; }
         public string Instructor {  get; set; }
         public DayOfWeek Day {  get; set; }
         public int Period { get; set; }
 
         public Session() : base(-1)
         {
-            SessionKind = SessionType.Lec;
+            Kind = SessionType.Lec;
             Instructor = "John Doe";
             Day = new DayOfWeek();
             Period = 0;
@@ -38,15 +38,15 @@ namespace CourseScheduleMaker
 
         public Session(int id, SessionType sessionKind, string instructor, DayOfWeek day, int period) : base(id)
         {
-            SessionKind = sessionKind;
+            Kind = sessionKind;
             Instructor = instructor ?? throw new ArgumentNullException(nameof(instructor));
             Day = day;
             Period = period;
         }
 
-        public Session(int id, GroupClasses sessionClasses, SessionType sessionKind, string instructor, DayOfWeek day, int period) : base(id)
+        public Session(int id, Class sessionClasses, SessionType sessionKind, string instructor, DayOfWeek day, int period) : base(id)
         {
-            SessionKind = sessionKind;
+            Kind = sessionKind;
             Instructor = instructor ?? throw new ArgumentNullException(nameof(instructor));
             Day = day;
             Period = period;
@@ -56,7 +56,7 @@ namespace CourseScheduleMaker
         
         public override string? ToString()
         {
-            return $"{SessionCourse.Name} ({SessionCourse.Code})\n{SessionKind} {SessionGroup.Name}\n{Instructor}";
+            return $"{Course.Name} ({Course.Code})\n{Kind} {Group.Name}\n{Instructor}";
         }
     }
 }

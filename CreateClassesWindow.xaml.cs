@@ -24,7 +24,7 @@ namespace CourseScheduleMaker
     public partial class CreateClassesWindow : Window
     {
         public List<SessionTextBoxes> SessionBoxes { get; set; } = new List<SessionTextBoxes>();
-        //public SessionType SessionKind { get; set; } = SessionType.Lec;
+        //public SessionType Kind { get; set; } = SessionType.Lec;
         public CreateClassesWindow()
         {
             InitializeComponent();
@@ -71,7 +71,7 @@ namespace CourseScheduleMaker
         {
             Course course = Course.ExistingOrNew(new Course(1, courseName.Text, courseCode.Text));
             Group group = Group.ExistingOrNew(new Group(1, courseGroup.Text, course));
-            GroupClasses classes = new GroupClasses(1, course, group);
+            Class classes = new Class(1, course, group);
             foreach (SessionTextBoxes sessionBox in SessionBoxes)
             {
                 classes.AddSession(new Session(1, sessionBox.SessionKind, sessionBox.Instructor, 

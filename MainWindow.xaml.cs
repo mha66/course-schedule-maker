@@ -21,6 +21,7 @@ using static System.Net.Mime.MediaTypeNames;
 using System.Windows.Controls.Primitives;
 using System.ComponentModel;
 
+
 namespace CourseScheduleMaker
 {
     /// <summary>
@@ -33,11 +34,11 @@ namespace CourseScheduleMaker
         //ViewModel
         public static ObservableCollection<Course>? CoursesView { get; set; }
         public static ObservableCollection<Group>? GroupsView { get; set; }
-        public static ObservableCollection<GroupClasses>? ClassesView { get; set; } = new ObservableCollection<GroupClasses>();
+        public static ObservableCollection<Class>? ClassesView { get; set; } = new ObservableCollection<Class>();
         //DBSource
         public static ObservableCollection<Course> Courses { get; set; } = new ObservableCollection<Course>();
         public static ObservableCollection<Group> Groups { get; set; } = new ObservableCollection<Group>();
-        public static ObservableCollection<GroupClasses> Classes { get; set; } = new ObservableCollection<GroupClasses>();
+        public static ObservableCollection<Class> Classes { get; set; } = new ObservableCollection<Class>();
 
         public static void UpdateCourseGroupViews()
         {
@@ -49,10 +50,10 @@ namespace CourseScheduleMaker
 
             new Course(1, "Math", "BA232");
             Courses[0].AddGroup(new Group(1, "08CC05"));
-            Courses[0].Groups[0].AddClasses(new GroupClasses(1, Courses[0]));
+            Courses[0].Groups[0].AddClasses(new Class(1, Courses[0]));
             Courses[0].Groups[0].Classes[0].AddSessions(new List<Session>() { new Session(), new Session(1, SessionType.Sec, "John Smith", DayOfWeek.Tuesday, 4) });
             Courses[0].AddGroup(new Group(1, "06ME03"));
-            Courses[0].Groups[1].AddClasses(new GroupClasses(1, Courses[0]));
+            Courses[0].Groups[1].AddClasses(new Class(1, Courses[0]));
             Courses[0].Groups[1].Classes[0].AddSessions(new List<Session>()
             {
                 new Session(1, SessionType.Lec,"Jim",DayOfWeek.Wednesday,10),
@@ -62,7 +63,7 @@ namespace CourseScheduleMaker
 
             new Course(2, "Physics", "CC456");
             Courses[1].AddGroup(new Group(1, "04EE02"));
-            Courses[1].Groups[0].AddClasses(new GroupClasses(1, Courses[1]));
+            Courses[1].Groups[0].AddClasses(new Class(1, Courses[1]));
             Courses[1].Groups[0].Classes[0].AddSessions(new List<Session>()
             {
                 new Session(1, SessionType.Lec, "Mark Roberts", DayOfWeek.Thursday, 2),
@@ -168,7 +169,7 @@ namespace CourseScheduleMaker
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 //list[^1] is equivalent to list[list.Count - 1] (last element)
-                GroupClasses? classes = (e.NewItems!.Count != 0) ? e.NewItems![^1] as GroupClasses : null;
+                Class? classes = (e.NewItems!.Count != 0) ? e.NewItems![^1] as Class : null;
 
                 foreach (var session in classes!.Sessions)
                 {
@@ -184,7 +185,7 @@ namespace CourseScheduleMaker
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems != null)
             {
-                foreach (GroupClasses oldClasses in e.OldItems)
+                foreach (Class oldClasses in e.OldItems)
                 {
                     //if left-hand operand of || evaluates to "true" then right-hand operand isn't evaluated
                     if (e.NewItems == null || !e.NewItems.Contains(oldClasses))
@@ -216,7 +217,7 @@ namespace CourseScheduleMaker
                 Group? group = groupsComboBox.SelectedItem as Group;
                 if (course != null && group != null)
                 {
-                    foreach (GroupClasses viewedClasses in ClassesView!)
+                    foreach (Class viewedClasses in ClassesView!)
                     {
 
                         if (viewedClasses.Course == course && viewedClasses.Group != group)
@@ -229,7 +230,7 @@ namespace CourseScheduleMaker
                         else if (viewedClasses.Course == course && viewedClasses.Group == group)
                             return;
                     }
-                    foreach (GroupClasses classes in group.Classes)
+                    foreach (Class classes in group.Classes)
                     {
 
                         if (classes.Course == course)
@@ -263,8 +264,8 @@ namespace CourseScheduleMaker
         {
 
             int pos = ClassesView!.Count - 1;
-            GroupClasses? newClasses = (sender as ComboBox)!.Tag as GroupClasses;
-            foreach (GroupClasses classes in ClassesView!)
+            Class? newClasses = (sender as ComboBox)!.Tag as Class;
+            foreach (Class classes in ClassesView!)
             {
                 if (classes.Course == newClasses!.Course)
                 {
@@ -275,7 +276,7 @@ namespace CourseScheduleMaker
                 }
             }
 
-            foreach (GroupClasses classes in newClasses!.Group.Classes)
+            foreach (Class classes in newClasses!.Group.Classes)
             {
                 if (classes.Course.Code == newClasses.Course.Code)
                 {
@@ -304,8 +305,8 @@ namespace CourseScheduleMaker
         private void ModifyCourseBtn_Click(object sender, RoutedEventArgs e)
         {
             
-            GroupClasses? newClasses = (sender as Button)!.Tag as GroupClasses;
-            foreach (GroupClasses classes in ClassesView!)
+            Class? newClasses = (sender as Button)!.Tag as Class;
+            foreach (Class classes in ClassesView!)
             {
                 if (classes.Course == newClasses!.Course)
                 {
@@ -318,7 +319,7 @@ namespace CourseScheduleMaker
                 }
             }
 
-            foreach (GroupClasses classes in newClasses!.Group.Classes)
+            foreach (Class classes in newClasses!.Group.Classes)
             {
                 if (classes.Course.Code == newClasses.Course.Code)
                 {
@@ -339,7 +340,7 @@ namespace CourseScheduleMaker
         /*private void CourseGroups_Loaded(object sender, RoutedEventArgs e)
         {
             var comboBox = sender as ComboBox;
-            comboBox.SelectedItem = (comboBox.Tag as GroupClasses).Group;
+            comboBox.SelectedItem = (comboBox.Tag as Class).Group;
             
         }*/
 

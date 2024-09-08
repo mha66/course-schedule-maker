@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CourseScheduleMaker
 {
-    public class GroupClasses : DBObject
+    public class Class : DBObject
     {
         public override string Name { get => $"{Course.Code} {Group.Name}"; }
         public Course Course { get; set; }
@@ -18,7 +18,7 @@ namespace CourseScheduleMaker
 
         public Group Group {  get; set; }
 
-       public GroupClasses() : base(-1)
+       public Class() : base(-1)
         {
             Course = new Course();
             Group = new Group();
@@ -27,20 +27,20 @@ namespace CourseScheduleMaker
         }
 
         //TODO: maybe remove????
-        public GroupClasses(int id, Course course) : base(id)
+        public Class(int id, Course course) : base(id)
         {
             Course = course;
             Course.AddClasses(this);
 
         }
-        public GroupClasses(int id, Course course, Group classesGroup) : base(id)
+        public Class(int id, Course course, Group classesGroup) : base(id)
         {
             Course = course;
             Course.AddClasses(this);
             classesGroup.AddClasses(this);
         }
 
-        public GroupClasses(GroupClasses classes) : base(classes)
+        public Class(Class classes) : base(classes)
         {
             Course = classes.Course;
             //TODO: not safe
@@ -52,9 +52,9 @@ namespace CourseScheduleMaker
         public void AddSession(Session session)
         {
             Sessions.Add(session);
-            session.SessionCourse = Course;
-            session.SessionClasses = this;
-            session.SessionGroup = Group;
+            session.Course = Course;
+            session.Class = this;
+            session.Group = Group;
         }
 
         public void AddSessions(IEnumerable<Session> sessions)
@@ -62,9 +62,9 @@ namespace CourseScheduleMaker
             foreach (Session session in sessions)
             {
                 Sessions.Add(session);
-                session.SessionCourse = Course;
-                session.SessionClasses = this;
-                session.SessionGroup = Group;
+                session.Course = Course;
+                session.Class = this;
+                session.Group = Group;
             }
         }
         public void RemoveSession(Session session) 
