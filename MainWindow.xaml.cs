@@ -76,7 +76,7 @@ namespace CourseScheduleMaker
 
 
             ClassesView!.CollectionChanged += ClassesView_CollectionChanged!;
-
+            DBSource.Connect();
 
             InitializeComponent();
             SetupScheduleGrid();
