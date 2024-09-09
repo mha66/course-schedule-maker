@@ -10,15 +10,20 @@ namespace CourseScheduleMaker
 {
     public class DBSource
     {
+        private static SQLiteConnection Conn { get; set; } = CreateConnection();
         public static void Initialize()
         {
-            SQLiteConnection conn = CreateConnection();
-            CreateTables(conn);
-            InsertData(conn);
-            //ReadData(conn);
-            conn.Close();
+            
+            CreateTables();
+            InsertData();
+            //ReadData();
+            //Conn.Close();
         }
 
+        public static void CloseConnection()
+        {
+            Conn.Close();
+        }
         public static SQLiteConnection CreateConnection()
         {
             SQLiteConnection conn = new SQLiteConnection("Data Source=CoursesDB.db; Version = 3; New = True; Compress = True; ");
@@ -34,9 +39,9 @@ namespace CourseScheduleMaker
             return conn;
         }
 
-        public static void CreateTables(SQLiteConnection conn)
+        public static void CreateTables()
         {
-            SQLiteCommand cmd = conn.CreateCommand();
+            SQLiteCommand cmd = Conn.CreateCommand();
             cmd.CommandText = """
                                  CREATE TABLE IF NOT EXISTS Course(
                                     CourseId INTEGER NOT NULL PRIMARY KEY,
@@ -106,9 +111,9 @@ namespace CourseScheduleMaker
 
             cmd.ExecuteNonQuery();
         }
-         public static void InsertData(SQLiteConnection conn)
+         public static void InsertData()
         {
-            SQLiteCommand cmd = conn.CreateCommand();
+            SQLiteCommand cmd = Conn.CreateCommand();
             cmd.CommandText = """
                                SELECT
                                 (SELECT Count(*) FROM SessionType) AS  CountType,
@@ -148,10 +153,10 @@ namespace CourseScheduleMaker
             }
         }
         /*
-        static void ReadData(SQLiteConnection conn)
+        static void ReadData(SQLiteConnection Conn)
         {
             SQLiteDataReader reader;
-            SQLiteCommand cmd = conn.CreateCommand();
+            SQLiteCommand cmd = Conn.CreateCommand();
             cmd.CommandText = "SELECT * FROM Sample1 WHERE ID%2=0;";
             reader = cmd.ExecuteReader();
             while (reader.Read())

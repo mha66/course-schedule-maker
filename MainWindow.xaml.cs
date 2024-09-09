@@ -337,6 +337,11 @@ namespace CourseScheduleMaker
             createClassesWindow.Show();
         }
 
+        private void MainWindow_Closed(object sender, EventArgs e)
+        {
+            DBSource.CloseConnection();
+        }
+
         /*private void CourseGroups_Loaded(object sender, RoutedEventArgs e)
         {
             var comboBox = sender as ComboBox;
