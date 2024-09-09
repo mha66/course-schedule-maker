@@ -10,12 +10,11 @@ namespace CourseScheduleMaker
 {
     public class DBSource
     {
-        //TODO: Insert into enum tables
-        public static void Connect()
+        public static void Initialize()
         {
             SQLiteConnection conn = CreateConnection();
             CreateTables(conn);
-            //InsertData(conn);
+            InsertData(conn);
             //ReadData(conn);
             conn.Close();
         }
@@ -51,13 +50,13 @@ namespace CourseScheduleMaker
                                  );
 
                                  CREATE TABLE IF NOT EXISTS CourseGroup (
-                                    	CourseId INTEGER NOT NULL,
-                                    	GroupId INTEGER NOT NULL,
+                                    CourseId INTEGER NOT NULL,
+                                    GroupId INTEGER NOT NULL,
 
-                                    	PRIMARY KEY (CourseId, GroupId),
-                                    	FOREIGN KEY (CourseId) REFERENCES Course (CourseId) 
+                                    PRIMARY KEY (CourseId, GroupId),
+                                    FOREIGN KEY (CourseId) REFERENCES Course (CourseId) 
                                              ON DELETE CASCADE ON UPDATE NO ACTION,
-                                    	FOREIGN KEY (GroupId) REFERENCES "Group" (GroupId) 
+                                    FOREIGN KEY (GroupId) REFERENCES "Group" (GroupId) 
                                              ON DELETE CASCADE ON UPDATE NO ACTION
                                  );
 
@@ -107,5 +106,62 @@ namespace CourseScheduleMaker
 
             cmd.ExecuteNonQuery();
         }
+         public static void InsertData(SQLiteConnection conn)
+        {
+            SQLiteCommand cmd = conn.CreateCommand();
+            cmd.CommandText = """
+                               SELECT
+                                (SELECT Count(*) FROM SessionType) AS  CountType,
+                                (SELECT Count(*) FROM DayOfWeek) AS CountDay;
+                               """;
+            SQLiteDataReader reader = cmd.ExecuteReader();
+            reader.Read();
+            Int64 countTypes = reader.GetInt64(0), countDays = reader.GetInt64(1);
+            reader.Close();
+            if (countTypes == 0)
+            {
+                cmd.CommandText = """
+                                 INSERT INTO SessionType (SessionTypeId, Name)
+                                 VALUES
+                                 	(0, 'Lec'),
+                                 	(1, 'Sec'),
+                                 	(2, 'Lab');
+                                 """;
+
+                cmd.ExecuteNonQuery();
+            }
+            if (countDays == 0)
+            {
+                cmd.CommandText = """
+                                 INSERT INTO DayOfWeek (DayOfWeekId, Name)
+                                 VALUES
+                                    (0, 'Sunday'),
+                                    (1, 'Monday'),
+                                    (2, 'Tuesday'),
+                                    (3, 'Wednesday'),
+                                    (4, 'Thursday'),
+                                    (5, 'Friday'),
+                                    (6, 'Saturday');
+                                 """;
+
+                cmd.ExecuteNonQuery();
+            }
+        }
+        /*
+        static void ReadData(SQLiteConnection conn)
+        {
+            SQLiteDataReader reader;
+            SQLiteCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT * FROM Sample1 WHERE ID%2=0;";
+            reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                string result = "";
+                for (int i = 0; i < reader.FieldCount; i++)
+                    result += reader.GetValue(i) + "  ";
+                Console.WriteLine(result);
+            }
+        }
+        */
     }
 }
