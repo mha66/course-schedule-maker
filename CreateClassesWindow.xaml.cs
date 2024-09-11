@@ -77,6 +77,7 @@ namespace CourseScheduleMaker
                 classes.AddSession(new Session(1, sessionBox.SessionKind, sessionBox.Instructor, 
                     sessionBox.Day, sessionBox.Period));
             }
+            DBSource.InsertClasses(classes);
             MainWindow.UpdateCourseGroupViews();
             MessageBox.Show("courses and groups are updated!");
         }

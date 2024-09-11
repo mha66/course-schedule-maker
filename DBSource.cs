@@ -15,7 +15,7 @@ namespace CourseScheduleMaker
         {
             
             CreateTables();
-            InsertData();
+            InsertEnumData();
             //ReadData();
             //Conn.Close();
         }
@@ -46,12 +46,12 @@ namespace CourseScheduleMaker
                                  CREATE TABLE IF NOT EXISTS Course(
                                     CourseId INTEGER NOT NULL PRIMARY KEY,
                                     Name TEXT,
-                                    Code TEXT NOT NULL
+                                    Code TEXT NOT NULL UNIQUE
                                  );
 
                                  CREATE TABLE IF NOT EXISTS "Group"(
                                     GroupId INTEGER NOT NULL PRIMARY KEY,
-                                    Name TEXT
+                                    Name TEXT UNIQUE
                                  );
 
                                  CREATE TABLE IF NOT EXISTS CourseGroup (
@@ -111,7 +111,7 @@ namespace CourseScheduleMaker
 
             cmd.ExecuteNonQuery();
         }
-         public static void InsertData()
+        public static void InsertEnumData()
         {
             SQLiteCommand cmd = Conn.CreateCommand();
             cmd.CommandText = """
@@ -152,6 +152,72 @@ namespace CourseScheduleMaker
                 cmd.ExecuteNonQuery();
             }
         }
+
+        
+        public static void InsertClasses(Class newClass)
+        {
+            Course course = newClass.Course;
+            Group group = newClass.Group;
+            SQLiteCommand cmd = Conn.CreateCommand();
+            //cmd.CommandText = """
+            //                    SELECT
+            //                        (SELECT MAX(CourseId) FROM Course),
+            //                        (SELECT MAX(GroupId) FROM "Group");
+            //    """;
+            //SQLiteDataReader reader = cmd.ExecuteReader();
+            //Int64 courseId = reader.GetInt64(0) + 1, groupId = reader.GetInt64(1) + 1;
+            //reader.Close();
+
+            cmd.Parameters.AddWithValue("@CourseName", course.Name);
+            cmd.Parameters.AddWithValue("@Code", course.Code);
+
+            cmd.Parameters.AddWithValue("@GroupName", group.Name);
+            cmd.Parameters.AddWithValue("@GroupName", group.Name);
+            //cmd.Parameters.AddWithValue("@ode", course.Code);
+            cmd.CommandText = """
+                                 INSERT OR IGNORE INTO Course (Name, Code)
+                                 VALUES
+                                 	(@CourseName, @Code);
+
+                                 INSERT OR IGNORE INTO "Group" (Name)
+                                 VALUES
+                                 	(@GroupName);
+                                 
+                                 INSERT INTO CourseGroup (CourseId, GroupId)
+                                 VALUES (
+                                    (SELECT CourseId FROM Course WHERE Code = @Code),
+                                    (SELECT GroupId FROM "Group" WHERE Name = @GroupName)
+                                 
+                                 );                                
+
+                                 """;
+
+            cmd.ExecuteNonQuery();
+        }
+
+        /*
+         """
+                                 INSERT INTO Course (Name, Code)
+                                 VALUES
+                                 	(@CourseName, @Code);
+
+                                 INSERT INTO "Group" (Name)
+                                 VALUES
+                                 	(@GroupName);
+                                 
+                                 
+                                 INSERT INTO CourseGroup (CourseId, GroupId)
+                                 VALUES (
+                                    (SELECT CourseId FROM Course 
+                                    WHERE CourseId = (SELECT MAX(CourseId) FROM Course)),
+                                    (SELECT GroupId FROM "Group"
+                                    WHERE GroupId = (SELECT MAX(GroupId) FROM "Group"))
+                                 
+                                 );                                
+
+                                 """;
+         */
+
         /*
         static void ReadData(SQLiteConnection Conn)
         {
