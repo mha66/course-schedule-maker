@@ -155,7 +155,7 @@ namespace CourseScheduleMaker
         }
 
         
-        public static void InsertClasses(Class newClass)
+        public static void InsertData(Class newClass)
         {
             Course course = newClass.Course;
             Group group = newClass.Group;
