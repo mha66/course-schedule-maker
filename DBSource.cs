@@ -125,6 +125,7 @@ namespace CourseScheduleMaker
             reader.Close();
             if (countTypes == 0)
             {
+                //TODO: use INSERT OR IGNORE
                 cmd.CommandText = """
                                  INSERT INTO SessionType (SessionTypeId, Name)
                                  VALUES
@@ -159,22 +160,29 @@ namespace CourseScheduleMaker
             Course course = newClass.Course;
             Group group = newClass.Group;
             SQLiteCommand cmd = Conn.CreateCommand();
-            //cmd.CommandText = """
-            //                    SELECT
-            //                        (SELECT MAX(CourseId) FROM Course),
-            //                        (SELECT MAX(GroupId) FROM "Group");
-            //    """;
-            //SQLiteDataReader reader = cmd.ExecuteReader();
-            //Int64 courseId = reader.GetInt64(0) + 1, groupId = reader.GetInt64(1) + 1;
-            //reader.Close();
 
             cmd.Parameters.AddWithValue("@CourseName", course.Name);
             cmd.Parameters.AddWithValue("@Code", course.Code);
 
             cmd.Parameters.AddWithValue("@GroupName", group.Name);
             cmd.Parameters.AddWithValue("@GroupName", group.Name);
-            //cmd.Parameters.AddWithValue("@ode", course.Code);
+
+            int i = 0;
+            foreach (Session session in newClass.Sessions)
+            {
+                cmd.Parameters.AddWithValue($"@Session{i}Kind", (int)session.Kind);
+                cmd.Parameters.AddWithValue($"@Session{i}Instructor", session.Instructor);
+                cmd.Parameters.AddWithValue($"@Session{i}Day", (int)session.Day);
+                cmd.Parameters.AddWithValue($"@Session{i}Period", session.Period);
+                i++;
+            }
+
             cmd.CommandText = """
+                                 CREATE TEMP TABLE IF NOT EXISTS Variables (
+                                   	CourseId INTEGER NOT NULL,
+                                    GroupId INTEGER NOT NULL
+                                 );
+
                                  INSERT OR IGNORE INTO Course (Name, Code)
                                  VALUES
                                  	(@CourseName, @Code);
@@ -182,57 +190,48 @@ namespace CourseScheduleMaker
                                  INSERT OR IGNORE INTO "Group" (Name)
                                  VALUES
                                  	(@GroupName);
-                                 
-                                 INSERT INTO CourseGroup (CourseId, GroupId)
+
+                                 INSERT OR REPLACE INTO Variables (CourseId, GroupId)
                                  VALUES (
                                     (SELECT CourseId FROM Course WHERE Code = @Code),
                                     (SELECT GroupId FROM "Group" WHERE Name = @GroupName)
-                                 
-                                 );                                
+                                 );
 
+                                 INSERT OR IGNORE INTO CourseGroup (CourseId, GroupId)
+                                 VALUES (
+                                    (SELECT CourseId FROM Variables),
+                                    (SELECT GroupId FROM Variables)
+                                 );
+
+                                 INSERT OR IGNORE INTO Class (CourseId, GroupId)
+                                 VALUES (
+                                    (SELECT CourseId FROM Variables),
+                                    (SELECT GroupId FROM Variables)
+                                 );
+                                 INSERT OR IGNORE INTO Session (Kind, Instructor, Day, Period, ClassId, CourseId, GroupId)
+                                 VALUES                    
                                  """;
+            for(int j = 0; j<i; j++)
+            {
+                cmd.CommandText += $"""
+                                 (
+                                 @Session{j}Kind, @Session{j}Instructor, @Session{j}Day, @Session{j}Period,
+
+                                 (SELECT DISTINCT ClassId FROM Class 
+                                 WHERE CourseId = (SELECT CourseId FROM Variables) AND GroupId = (SELECT GroupId FROM Variables)),
+
+                                 (SELECT CourseId FROM Variables),
+                                 (SELECT GroupId FROM Variables)
+                                 )
+
+                    """;
+                cmd.CommandText += (j == i - 1) ? ";" : ",";
+            }
+            cmd.CommandText += "DROP TABLE IF EXISTS Variables;";
 
             cmd.ExecuteNonQuery();
         }
 
-        /*
-         """
-                                 INSERT INTO Course (Name, Code)
-                                 VALUES
-                                 	(@CourseName, @Code);
-
-                                 INSERT INTO "Group" (Name)
-                                 VALUES
-                                 	(@GroupName);
-                                 
-                                 
-                                 INSERT INTO CourseGroup (CourseId, GroupId)
-                                 VALUES (
-                                    (SELECT CourseId FROM Course 
-                                    WHERE CourseId = (SELECT MAX(CourseId) FROM Course)),
-                                    (SELECT GroupId FROM "Group"
-                                    WHERE GroupId = (SELECT MAX(GroupId) FROM "Group"))
-                                 
-                                 );                                
-
-                                 """;
-         */
-
-        /*
-        static void ReadData(SQLiteConnection Conn)
-        {
-            SQLiteDataReader reader;
-            SQLiteCommand cmd = Conn.CreateCommand();
-            cmd.CommandText = "SELECT * FROM Sample1 WHERE ID%2=0;";
-            reader = cmd.ExecuteReader();
-            while (reader.Read())
-            {
-                string result = "";
-                for (int i = 0; i < reader.FieldCount; i++)
-                    result += reader.GetValue(i) + "  ";
-                Console.WriteLine(result);
-            }
-        }
-        */
+        
     }
 }
