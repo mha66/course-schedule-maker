@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,8 @@ namespace CourseScheduleMaker
 {
     public class Group : DBObject
     {
- 
+
+        public static Dictionary<int, Group> IdToGroup = new Dictionary<int, Group>();
         public ObservableCollection<Course> Courses { get; set; } = new ObservableCollection<Course>();
         public List<Class> Classes { get; set; } = new List<Class>();
 
@@ -24,7 +26,12 @@ namespace CourseScheduleMaker
             ExistingOrNew(this);
         }
 
-
+        public Group(SQLiteDataReader reader)
+        {
+            Id = reader.GetInt32(0);
+            Name = reader.GetString(1);
+            IdToGroup.Add(Id, this);
+        }
         public static Group ExistingOrNew(Group group)
         {
             foreach (var existingGroup in MainWindow.Groups)

@@ -208,6 +208,7 @@ namespace CourseScheduleMaker
                                     (SELECT CourseId FROM Variables),
                                     (SELECT GroupId FROM Variables)
                                  );
+
                                  INSERT OR IGNORE INTO Session (Kind, Instructor, Day, Period, ClassId, CourseId, GroupId)
                                  VALUES                    
                                  """;
@@ -231,7 +232,16 @@ namespace CourseScheduleMaker
 
             cmd.ExecuteNonQuery();
         }
-
         
+        //TODO: make constructors in each class to create objects from db
+        public static void ReadData()
+        {
+            SQLiteCommand cmd = Conn.CreateCommand();
+            cmd.CommandText = """
+                               SELECT
+                                (SELECT Count(*) FROM SessionType) AS  CountType,
+                                (SELECT Count(*) FROM DayOfWeek) AS CountDay;
+                               """;
+        }
     }
 }

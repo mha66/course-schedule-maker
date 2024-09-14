@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,9 +15,11 @@ namespace CourseScheduleMaker
     
         public string Code { get; set; }
 
+        public static Dictionary<int, Course> IdToCourse = new Dictionary<int, Course>();
         // *****type could just be List<Group>
         public ObservableCollection<Group> Groups { get; set; } = new ObservableCollection<Group>();
         public ObservableCollection<Class> Classes { get; set; } = new ObservableCollection<Class>();
+        
         public List<string> Professors { get; set; } = new List<string>();
         public List<string> TAs { get; set; } = new List<string>();
 
@@ -42,6 +45,14 @@ namespace CourseScheduleMaker
             Groups = groups ?? throw new ArgumentNullException(nameof(groups));
             Professors = professors ?? throw new ArgumentNullException(nameof(professors));
             TAs = tas ?? throw new ArgumentNullException(nameof(tas));
+        }
+
+        public Course(SQLiteDataReader reader)
+        {
+            Id = reader.GetInt32(0);
+            Name = reader.GetString(1);
+            Code = reader.GetString(2);
+            IdToCourse.Add(Id, this);
         }
 
         public static Course ExistingOrNew(Course course)

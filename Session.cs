@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -52,8 +53,16 @@ namespace CourseScheduleMaker
             Period = period;
             sessionClasses.AddSession(this);
         }
+        public Session(SQLiteDataReader reader)
+        {
+            Id = reader.GetInt32(0);
+            Kind = (SessionType)reader.GetInt32(1);
+            Instructor = reader.GetString(2);
+            Day = (DayOfWeek)reader.GetInt32(3);
+            Period = reader.GetInt32(4);
+        }
 
-        
+
         public override string? ToString()
         {
             return $"{Course.Name} ({Course.Code})\n{Kind} {Group.Name}\n{Instructor}";

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.SQLite;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -11,12 +12,12 @@ namespace CourseScheduleMaker
 {
     public class Class : DBObject
     {
-        public override string Name { get => $"{Course.Code} {Group.Name}"; }
-        public Course Course { get; set; }
+        public override string Name { get => $"{Course!.Code} {Group!.Name}"; }
+        public Course? Course { get; set; }
         public List<Session> Sessions = new List<Session>(3);
 
 
-        public Group Group {  get; set; }
+        public Group? Group {  get; set; }
 
        public Class() : base(-1)
         {
@@ -47,14 +48,17 @@ namespace CourseScheduleMaker
             Group = classes.Group;
             Sessions = classes.Sessions;
         }
-
+        public Class(SQLiteDataReader reader)
+        {
+            Id = reader.GetInt32(0);
+        }
 
         public void AddSession(Session session)
         {
             Sessions.Add(session);
-            session.Course = Course;
+            session.Course = Course!;
             session.Class = this;
-            session.Group = Group;
+            session.Group = Group!;
         }
 
         public void AddSessions(IEnumerable<Session> sessions)
@@ -62,9 +66,9 @@ namespace CourseScheduleMaker
             foreach (Session session in sessions)
             {
                 Sessions.Add(session);
-                session.Course = Course;
+                session.Course = Course!;
                 session.Class = this;
-                session.Group = Group;
+                session.Group = Group!;
             }
         }
         public void RemoveSession(Session session) 
