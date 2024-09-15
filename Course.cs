@@ -66,16 +66,17 @@ namespace CourseScheduleMaker
             return course;
         }
 
-        //attach group to course only using this
         public void AddClasses(Class classes)
         {
             Classes.Add(classes);
+            classes.Course = this;
         }
 
         public void RemoveClasses(Class classes)
         {
             Classes.Remove(classes);
         }
+        //attach group to course only using this
         public void AddGroup(Group group)
         {
             Groups.Add(group);

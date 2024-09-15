@@ -57,11 +57,11 @@ namespace CourseScheduleMaker
         {
             Classes.Add(courseClasses);
             courseClasses.Group = this;
-            if(!Courses.Contains(courseClasses.Course))
-            {
-               Courses.Add(courseClasses.Course);
-               courseClasses.Course.Groups.Add(this);
-            }
+            //if(!Courses.Contains(courseClasses.Course))
+            //{
+            //   Courses.Add(courseClasses.Course);
+            //   courseClasses.Course.Groups.Add(this);
+            //}
             
         }
 

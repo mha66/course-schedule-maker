@@ -60,6 +60,7 @@ namespace CourseScheduleMaker
             Instructor = reader.GetString(2);
             Day = (DayOfWeek)reader.GetInt32(3);
             Period = reader.GetInt32(4);
+            Class.IdToClass[reader.GetInt32(5)].AddSession(this);
         }
 
 

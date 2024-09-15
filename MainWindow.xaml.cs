@@ -38,37 +38,46 @@ namespace CourseScheduleMaker
         //DBSource
         public static ObservableCollection<Course> Courses { get; set; } = new ObservableCollection<Course>();
         public static ObservableCollection<Group> Groups { get; set; } = new ObservableCollection<Group>();
-        public static ObservableCollection<Class> Classes { get; set; } = new ObservableCollection<Class>();
+        //public static ObservableCollection<Class> Classes { get; set; } = new ObservableCollection<Class>();
 
-        public static void UpdateCourseGroupViews()
+        public static void UpdateCourseGroupViews(char addedType)
         {
-            GroupsView!.Add(Groups[^1]);
-            CoursesView!.Add(Courses[^1]);
+            if(addedType == 'G')
+                GroupsView!.Add(Groups[^1]);
+            else if(addedType == 'C')
+                CoursesView!.Add(Courses[^1]);
+            else
+            {
+                GroupsView!.Add(Groups[^1]);
+                CoursesView!.Add(Courses[^1]);
+            }
         }
         public MainWindow()
         {
 
-            new Course(1, "Math", "BA232");
-            Courses[0].AddGroup(new Group(1, "08CC05"));
-            Courses[0].Groups[0].AddClasses(new Class(1, Courses[0]));
-            Courses[0].Groups[0].Classes[0].AddSessions(new List<Session>() { new Session(), new Session(1, SessionType.Sec, "John Smith", DayOfWeek.Tuesday, 4) });
-            Courses[0].AddGroup(new Group(1, "06ME03"));
-            Courses[0].Groups[1].AddClasses(new Class(1, Courses[0]));
-            Courses[0].Groups[1].Classes[0].AddSessions(new List<Session>()
-            {
-                new Session(1, SessionType.Lec,"Jim",DayOfWeek.Wednesday,10),
-                new Session(2, SessionType.Sec, "John Smith", DayOfWeek.Tuesday, 6),
-                new Session(3, SessionType.Lab, "Mark", DayOfWeek.Monday, 4)
-            });
+            //new Course(1, "Math", "BA232");
+            //Courses[0].AddGroup(new Group(1, "08CC05"));
+            //Courses[0].Groups[0].AddClasses(new Class(1, Courses[0]));
+            //Courses[0].Groups[0].Classes[0].AddSessions(new List<Session>() { new Session(), new Session(1, SessionType.Sec, "John Smith", DayOfWeek.Tuesday, 4) });
+            //Courses[0].AddGroup(new Group(1, "06ME03"));
+            //Courses[0].Groups[1].AddClasses(new Class(1, Courses[0]));
+            //Courses[0].Groups[1].Classes[0].AddSessions(new List<Session>()
+            //{
+            //    new Session(1, SessionType.Lec,"Jim",DayOfWeek.Wednesday,10),
+            //    new Session(2, SessionType.Sec, "John Smith", DayOfWeek.Tuesday, 6),
+            //    new Session(3, SessionType.Lab, "Mark", DayOfWeek.Monday, 4)
+            //});
 
-            new Course(2, "Physics", "CC456");
-            Courses[1].AddGroup(new Group(1, "04EE02"));
-            Courses[1].Groups[0].AddClasses(new Class(1, Courses[1]));
-            Courses[1].Groups[0].Classes[0].AddSessions(new List<Session>()
-            {
-                new Session(1, SessionType.Lec, "Mark Roberts", DayOfWeek.Thursday, 2),
-                new Session(2, SessionType.Sec, "Jack Johnson", DayOfWeek.Tuesday, 6),
-            });
+            //new Course(2, "Physics", "CC456");
+            //Courses[1].AddGroup(new Group(1, "04EE02"));
+            //Courses[1].Groups[0].AddClasses(new Class(1, Courses[1]));
+            //Courses[1].Groups[0].Classes[0].AddSessions(new List<Session>()
+            //{
+            //    new Session(1, SessionType.Lec, "Mark Roberts", DayOfWeek.Thursday, 2),
+            //    new Session(2, SessionType.Sec, "Jack Johnson", DayOfWeek.Tuesday, 6),
+            //});
+            DBSource.Initialize();
+            DBSource.ReadData();
 
             // TODO: find a better place for the following two lines
             GroupsView = new ObservableCollection<Group>(Groups);
@@ -76,7 +85,6 @@ namespace CourseScheduleMaker
 
 
             ClassesView!.CollectionChanged += ClassesView_CollectionChanged!;
-            DBSource.Initialize();
 
             InitializeComponent();
             SetupScheduleGrid();

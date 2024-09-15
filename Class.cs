@@ -7,11 +7,13 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace CourseScheduleMaker
 {
     public class Class : DBObject
     {
+        public static Dictionary<int, Class> IdToClass = new Dictionary<int, Class>();
         public override string Name { get => $"{Course!.Code} {Group!.Name}"; }
         public Course? Course { get; set; }
         public List<Session> Sessions = new List<Session>(3);
@@ -51,6 +53,9 @@ namespace CourseScheduleMaker
         public Class(SQLiteDataReader reader)
         {
             Id = reader.GetInt32(0);
+            Course.IdToCourse[reader.GetInt32(1)].AddClasses(this);
+            Group.IdToGroup[reader.GetInt32(2)].AddClasses(this);
+            IdToClass.Add(Id, this);
         }
 
         public void AddSession(Session session)

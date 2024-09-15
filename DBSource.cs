@@ -233,15 +233,64 @@ namespace CourseScheduleMaker
             cmd.ExecuteNonQuery();
         }
         
-        //TODO: make constructors in each class to create objects from db
         public static void ReadData()
         {
             SQLiteCommand cmd = Conn.CreateCommand();
             cmd.CommandText = """
-                               SELECT
-                                (SELECT Count(*) FROM SessionType) AS  CountType,
-                                (SELECT Count(*) FROM DayOfWeek) AS CountDay;
+                               SELECT CourseId, Name, Code FROM Course;
                                """;
+            SQLiteDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                var course = new Course(reader);
+                MainWindow.Courses.Add(course);
+               // MainWindow.UpdateCourseGroupViews('C');
+            }
+            reader.Close();
+
+            cmd.CommandText = """
+                               SELECT GroupId, Name FROM "Group";
+                               """;
+            reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                var group = new Group(reader);
+                MainWindow.Groups.Add(group);
+                //MainWindow.UpdateCourseGroupViews('G');
+            }
+            reader.Close();
+
+            cmd.CommandText = """
+                               SELECT CourseId, GroupId FROM CourseGroup;
+                               """;
+            reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                int courseId = reader.GetInt32(0), groupId = reader.GetInt32(1);
+                Course.IdToCourse[courseId].AddGroup(Group.IdToGroup[groupId]);
+            }
+            reader.Close();
+
+            cmd.CommandText = """
+                   SELECT ClassId, CourseId, GroupId FROM Class;
+                   """;
+            reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                var classes = new Class(reader);
+            }
+            reader.Close();
+
+            cmd.CommandText = """
+                   SELECT SessionId, Kind, Instructor, Day, Period, ClassId FROM Session;
+                   """;
+            reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                var session = new Session(reader);
+            }
+            reader.Close();
+
         }
     }
 }

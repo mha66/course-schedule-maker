@@ -69,6 +69,7 @@ namespace CourseScheduleMaker
 
         private void CreateCourseBtn_Click(object sender, RoutedEventArgs e)
         {
+            //TODO: fix wrong id
             Course course = Course.ExistingOrNew(new Course(1, courseName.Text, courseCode.Text));
             Group group = Group.ExistingOrNew(new Group(1, courseGroup.Text, course));
             Class classes = new Class(1, course, group);
@@ -78,7 +79,7 @@ namespace CourseScheduleMaker
                     sessionBox.Day, sessionBox.Period));
             }
             DBSource.InsertData(classes);
-            MainWindow.UpdateCourseGroupViews();
+            MainWindow.UpdateCourseGroupViews('B');
             MessageBox.Show("courses and groups are updated!");
         }
     }
