@@ -20,6 +20,8 @@ namespace CourseScheduleMaker
     }
     public class Session : DBObject
     {
+        public static Dictionary<int, Session> IdToSession = new Dictionary<int, Session>();
+        public static int MaxId { get => DBSource.GetMaxId(IdToSession); }
         public override string Name { get => $"{Class.Name} {Kind}"; }
         public Course Course { get; set; }
         public Group Group { get; set; }
@@ -45,6 +47,15 @@ namespace CourseScheduleMaker
             Period = period;
         }
 
+        public Session(SessionType sessionKind, string instructor, DayOfWeek day, int period) : base(MaxId + 1)
+        {
+            Kind = sessionKind;
+            Instructor = instructor ?? throw new ArgumentNullException(nameof(instructor));
+            Day = day;
+            Period = period;
+            IdToSession.Add(Id, this);
+        }
+
         public Session(int id, Class sessionClasses, SessionType sessionKind, string instructor, DayOfWeek day, int period) : base(id)
         {
             Kind = sessionKind;
@@ -61,6 +72,7 @@ namespace CourseScheduleMaker
             Day = (DayOfWeek)reader.GetInt32(3);
             Period = reader.GetInt32(4);
             Class.IdToClass[reader.GetInt32(5)].AddSession(this);
+            IdToSession.Add(Id, this);
         }
 
 

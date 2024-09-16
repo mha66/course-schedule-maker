@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -16,6 +17,7 @@ namespace CourseScheduleMaker
         public string Code { get; set; }
 
         public static Dictionary<int, Course> IdToCourse = new Dictionary<int, Course>();
+        public static int MaxId { get => DBSource.GetMaxId(IdToCourse); }
         // *****type could just be List<Group>
         public ObservableCollection<Group> Groups { get; set; } = new ObservableCollection<Group>();
         public ObservableCollection<Class> Classes { get; set; } = new ObservableCollection<Class>();
@@ -35,6 +37,13 @@ namespace CourseScheduleMaker
             ExistingOrNew(this);
             Code = code ?? throw new ArgumentNullException(nameof(code));
         }
+
+        public Course(string name, string code) : base(name)
+        {
+            ExistingOrNew(this);
+            Code = code ?? throw new ArgumentNullException(nameof(code));
+        }
+
 
         public Course(int id, string name, string code, ObservableCollection<Group> groups, List<string> professors, List<string> tas)
         {
@@ -62,6 +71,8 @@ namespace CourseScheduleMaker
                 if(existingCourse == course)
                     return existingCourse;
             }
+            course.Id = MaxId + 1;
+            IdToCourse.Add(course.Id, course);
             MainWindow.Courses.Add(course); 
             return course;
         }

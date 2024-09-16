@@ -5,6 +5,7 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace CourseScheduleMaker
 {
@@ -12,6 +13,7 @@ namespace CourseScheduleMaker
     {
 
         public static Dictionary<int, Group> IdToGroup = new Dictionary<int, Group>();
+        public static int MaxId { get => DBSource.GetMaxId(IdToGroup); }
         public ObservableCollection<Course> Courses { get; set; } = new ObservableCollection<Course>();
         public List<Class> Classes { get; set; } = new List<Class>();
 
@@ -25,7 +27,11 @@ namespace CourseScheduleMaker
             initialCourse.AddGroup(this);
             ExistingOrNew(this);
         }
-
+        public Group(string name, Course initialCourse) : base(name)
+        {
+            initialCourse.AddGroup(this);
+            ExistingOrNew(this);
+        }
         public Group(SQLiteDataReader reader)
         {
             Id = reader.GetInt32(0);
@@ -39,6 +45,8 @@ namespace CourseScheduleMaker
                 if (existingGroup == group)
                     return existingGroup;
             }
+            group.Id = MaxId + 1;
+            IdToGroup.Add(group.Id, group);
             MainWindow.Groups.Add(group);
             return group;
         }

@@ -14,7 +14,6 @@ namespace CourseScheduleMaker
         public DBObject() 
         {
             Id = -1;
-            Name = "database object";
         }
 
         public DBObject(int id)
@@ -22,6 +21,10 @@ namespace CourseScheduleMaker
             Id = id;
         }
 
+        public DBObject(string name)
+        {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+        }
         public DBObject(int id, string name)
         {
             Id = id;

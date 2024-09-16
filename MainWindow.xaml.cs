@@ -40,17 +40,11 @@ namespace CourseScheduleMaker
         public static ObservableCollection<Group> Groups { get; set; } = new ObservableCollection<Group>();
         //public static ObservableCollection<Class> Classes { get; set; } = new ObservableCollection<Class>();
 
-        public static void UpdateCourseGroupViews(char addedType)
+        public static void UpdateCourseGroupViews()
         {
-            if(addedType == 'G')
-                GroupsView!.Add(Groups[^1]);
-            else if(addedType == 'C')
-                CoursesView!.Add(Courses[^1]);
-            else
-            {
+          
                 GroupsView!.Add(Groups[^1]);
                 CoursesView!.Add(Courses[^1]);
-            }
         }
         public MainWindow()
         {

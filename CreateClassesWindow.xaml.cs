@@ -67,19 +67,22 @@ namespace CourseScheduleMaker
             }
         }
 
+
+        //TODO: fix creating new groups for old courses not showing up in the course's combo box
+        //TODO: fix creating new groups for old courses duplicating the course in the courses combo box
         private void CreateCourseBtn_Click(object sender, RoutedEventArgs e)
         {
-            //TODO: fix wrong id
-            Course course = Course.ExistingOrNew(new Course(1, courseName.Text, courseCode.Text));
-            Group group = Group.ExistingOrNew(new Group(1, courseGroup.Text, course));
-            Class classes = new Class(1, course, group);
+
+            Course course = Course.ExistingOrNew(new Course(courseName.Text, courseCode.Text));
+            Group group = Group.ExistingOrNew(new Group(courseGroup.Text, course));
+            Class classes = new Class(course, group);
             foreach (SessionTextBoxes sessionBox in SessionBoxes)
             {
-                classes.AddSession(new Session(1, sessionBox.SessionKind, sessionBox.Instructor, 
+                classes.AddSession(new Session(sessionBox.SessionKind, sessionBox.Instructor, 
                     sessionBox.Day, sessionBox.Period));
             }
             DBSource.InsertData(classes);
-            MainWindow.UpdateCourseGroupViews('B');
+            MainWindow.UpdateCourseGroupViews();
             MessageBox.Show("courses and groups are updated!");
         }
     }

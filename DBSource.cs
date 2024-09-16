@@ -10,19 +10,30 @@ namespace CourseScheduleMaker
 {
     public class DBSource
     {
-        private static SQLiteConnection Conn { get; set; } = CreateConnection();
+        private static SQLiteConnection Connection { get; set; } = CreateConnection();
+
+        public static int GetMaxId<T>(Dictionary<int, T> dictionary)
+        {
+            int max = Int32.MinValue;
+            foreach (var key in dictionary.Keys)
+            {
+                if (key > max)
+                    max = key;
+            }
+            return max;
+        }
         public static void Initialize()
         {
             
             CreateTables();
             InsertEnumData();
             //ReadData();
-            //Conn.Close();
+            //Connection.Close();
         }
 
         public static void CloseConnection()
         {
-            Conn.Close();
+            Connection.Close();
         }
         public static SQLiteConnection CreateConnection()
         {
@@ -41,7 +52,7 @@ namespace CourseScheduleMaker
 
         public static void CreateTables()
         {
-            SQLiteCommand cmd = Conn.CreateCommand();
+            SQLiteCommand cmd = Connection.CreateCommand();
             cmd.CommandText = """
                                  CREATE TABLE IF NOT EXISTS Course(
                                     CourseId INTEGER NOT NULL PRIMARY KEY,
@@ -113,7 +124,7 @@ namespace CourseScheduleMaker
         }
         public static void InsertEnumData()
         {
-            SQLiteCommand cmd = Conn.CreateCommand();
+            SQLiteCommand cmd = Connection.CreateCommand();
             cmd.CommandText = """
                                SELECT
                                 (SELECT Count(*) FROM SessionType) AS  CountType,
@@ -157,10 +168,11 @@ namespace CourseScheduleMaker
         
         public static void InsertData(Class newClass)
         {
-            Course course = newClass.Course;
-            Group group = newClass.Group;
-            SQLiteCommand cmd = Conn.CreateCommand();
+            Course course = newClass.Course!;
+            Group group = newClass.Group!;
 
+            SQLiteCommand cmd = Connection.CreateCommand();
+            
             cmd.Parameters.AddWithValue("@CourseName", course.Name);
             cmd.Parameters.AddWithValue("@Code", course.Code);
 
@@ -229,8 +241,8 @@ namespace CourseScheduleMaker
                 cmd.CommandText += (j == i - 1) ? ";" : ",";
             }
             cmd.CommandText += "DROP TABLE IF EXISTS Variables;";
-
             cmd.ExecuteNonQuery();
+     
         }
         
         public static void InsertIntoObjects(SQLiteCommand cmd, string columnNames, string tableName)
@@ -269,7 +281,7 @@ namespace CourseScheduleMaker
         }
         public static void ReadData()
         {
-            SQLiteCommand cmd = Conn.CreateCommand();
+            SQLiteCommand cmd = Connection.CreateCommand();
 
             InsertIntoObjects(cmd, "CourseId, Name, Code", "Course");
 
@@ -280,60 +292,6 @@ namespace CourseScheduleMaker
             InsertIntoObjects(cmd, "ClassId, CourseId, GroupId", "Class");
 
             InsertIntoObjects(cmd, "SessionId, Kind, Instructor, Day, Period, ClassId", "Session");
-            //cmd.CommandText = """
-            //                   SELECT CourseId, Name, Code FROM Course;
-            //                   """;
-            //SQLiteDataReader reader = cmd.ExecuteReader();
-            //while (reader.Read())
-            //{
-            //    var course = new Course(reader);
-            //    MainWindow.Courses.Add(course);
-            //   // MainWindow.UpdateCourseGroupViews('C');
-            //}
-            //reader.Close();
-
-            //cmd.CommandText = """
-            //                   SELECT GroupId, Name FROM "Group";
-            //                   """;
-            //reader = cmd.ExecuteReader();
-            //while (reader.Read())
-            //{
-            //    var group = new Group(reader);
-            //    MainWindow.Groups.Add(group);
-            //    //MainWindow.UpdateCourseGroupViews('G');
-            //}
-            //reader.Close();
-
-            //cmd.CommandText = """
-            //                   SELECT CourseId, GroupId FROM CourseGroup;
-            //                   """;
-            //reader = cmd.ExecuteReader();
-            //while (reader.Read())
-            //{
-            //    int courseId = reader.GetInt32(0), groupId = reader.GetInt32(1);
-            //    Course.IdToCourse[courseId].AddGroup(Group.IdToGroup[groupId]);
-            //}
-            //reader.Close();
-
-            //cmd.CommandText = """
-            //       SELECT ClassId, CourseId, GroupId FROM Class;
-            //       """;
-            //reader = cmd.ExecuteReader();
-            //while (reader.Read())
-            //{
-            //    var classes = new Class(reader);
-            //}
-            //reader.Close();
-
-            //cmd.CommandText = """
-            //       SELECT SessionId, Kind, Instructor, Day, Period, ClassId FROM Session;
-            //       """;
-            //reader = cmd.ExecuteReader();
-            //while (reader.Read())
-            //{
-            //    var session = new Session(reader);
-            //}
-            //reader.Close();
 
         }
     }

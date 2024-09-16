@@ -14,6 +14,7 @@ namespace CourseScheduleMaker
     public class Class : DBObject
     {
         public static Dictionary<int, Class> IdToClass = new Dictionary<int, Class>();
+        public static int MaxId { get => DBSource.GetMaxId(IdToClass); }
         public override string Name { get => $"{Course!.Code} {Group!.Name}"; }
         public Course? Course { get; set; }
         public List<Session> Sessions = new List<Session>(3);
@@ -39,6 +40,14 @@ namespace CourseScheduleMaker
         public Class(int id, Course course, Group classesGroup) : base(id)
         {
             Course = course;
+            Course.AddClasses(this);
+            classesGroup.AddClasses(this);
+        }
+
+        public Class(Course course, Group classesGroup) : base(MaxId + 1)
+        {
+            Course = course;
+            IdToClass.Add(Id, this);
             Course.AddClasses(this);
             classesGroup.AddClasses(this);
         }
