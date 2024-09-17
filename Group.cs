@@ -42,8 +42,13 @@ namespace CourseScheduleMaker
         {
             foreach (var existingGroup in MainWindow.Groups)
             {
-                if (existingGroup == group)
+                if (existingGroup.Name == group.Name)
+                {
+                    //TODO: fix groups are duplicated
+                    group.Courses[^1].AddGroup(existingGroup);
+                    group.Courses[^1].RemoveGroup(group);
                     return existingGroup;
+                }
             }
             group.Id = MaxId + 1;
             IdToGroup.Add(group.Id, group);

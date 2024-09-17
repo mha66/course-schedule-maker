@@ -82,7 +82,27 @@ namespace CourseScheduleMaker
                     sessionBox.Day, sessionBox.Period));
             }
             DBSource.InsertData(classes);
-            MainWindow.UpdateCourseGroupViews();
+            //MainWindow.UpdateCourseGroupViews();
+            //foreach (Window window in Application.Current.Windows)
+            //{
+            //    //if (window.GetType() == typeof(MainWindow))
+            //    //{
+            //    //    var mainWindow = window as MainWindow;
+            //    //    foreach (var oldClass in MainWindow.ClassesView!)
+            //    //    {
+            //    //        if (oldClass.Course.Id == course.Id)
+            //    //        {
+            //    //            //oldClass.Course.AddGroup(group);
+
+            //    //            MainWindow.ClassesView.Remove(oldClass);
+            //    //            MainWindow.ClassesView.Add(oldClass);
+            //    //        }
+            //    //    }
+            //    //        mainWindow!.addedCourses.Items.Refresh();
+                    
+            //    //    break;
+            //    //}
+            //}
             MessageBox.Show("courses and groups are updated!");
         }
     }

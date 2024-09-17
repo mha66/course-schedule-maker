@@ -8,6 +8,7 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace CourseScheduleMaker
 {
@@ -40,8 +41,8 @@ namespace CourseScheduleMaker
 
         public Course(string name, string code) : base(name)
         {
-            ExistingOrNew(this);
             Code = code ?? throw new ArgumentNullException(nameof(code));
+            ExistingOrNew(this);
         }
 
 
@@ -68,12 +69,14 @@ namespace CourseScheduleMaker
         {
             foreach (var existingCourse in MainWindow.Courses)
             {
-                if(existingCourse == course)
+                if (existingCourse.Code == course.Code)
+                {
                     return existingCourse;
+                }
             }
             course.Id = MaxId + 1;
             IdToCourse.Add(course.Id, course);
-            MainWindow.Courses.Add(course); 
+            MainWindow.Courses.Add(course);
             return course;
         }
 

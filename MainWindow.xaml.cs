@@ -40,11 +40,31 @@ namespace CourseScheduleMaker
         public static ObservableCollection<Group> Groups { get; set; } = new ObservableCollection<Group>();
         //public static ObservableCollection<Class> Classes { get; set; } = new ObservableCollection<Class>();
 
+
+        private void Courses_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                //foreach (var course in Courses)
+                //{
+                //    if (course.Code == (e.NewItems[0] as Course).Code && )
+                //}
+                CoursesView!.Add(Courses[^1]);
+            }
+           
+        }
+
+        private void Groups_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+                GroupsView!.Add(Groups[^1]);
+        }
         public static void UpdateCourseGroupViews()
         {
           
                 GroupsView!.Add(Groups[^1]);
                 CoursesView!.Add(Courses[^1]);
+           
         }
         public MainWindow()
         {
@@ -79,6 +99,8 @@ namespace CourseScheduleMaker
 
 
             ClassesView!.CollectionChanged += ClassesView_CollectionChanged!;
+            Courses.CollectionChanged += Courses_CollectionChanged!;
+            Groups.CollectionChanged += Groups_CollectionChanged!;
 
             InitializeComponent();
             SetupScheduleGrid();

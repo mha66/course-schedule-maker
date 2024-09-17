@@ -55,7 +55,7 @@
             </StackPanel>
         </DockPanel>
 
-        <ListView x:Name="addedCourses" ItemsSource="{Binding ClassesView}" Grid.Row="1" Grid.Column="0" Margin="20">
+        <ListView x:Name="addedCourses" x:FieldModifier="public" ItemsSource="{Binding ClassesView}" Grid.Row="1" Grid.Column="0" Margin="20">
             <!--TODO: Center content -->
             <ListView.View>
                 <GridView AllowsColumnReorder="false" ColumnHeaderToolTip="Course Information">
