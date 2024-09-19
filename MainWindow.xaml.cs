@@ -41,6 +41,15 @@ namespace CourseScheduleMaker
         //public static ObservableCollection<Class> Classes { get; set; } = new ObservableCollection<Class>();
 
 
+        private static void AddCourseView(Course course)
+        {
+            foreach(var courseView in CoursesView!)
+            {
+                if (courseView == course)
+                    return;
+            }
+            CoursesView!.Add(course);
+        }
         private void Courses_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
@@ -49,7 +58,7 @@ namespace CourseScheduleMaker
                 //{
                 //    if (course.Code == (e.NewItems[0] as Course).Code && )
                 //}
-                CoursesView!.Add(Courses[^1]);
+                AddCourseView(Courses[^1]);
             }
            
         }
@@ -63,7 +72,7 @@ namespace CourseScheduleMaker
         {
           
                 GroupsView!.Add(Groups[^1]);
-                CoursesView!.Add(Courses[^1]);
+                AddCourseView(Courses[^1]);
            
         }
         public MainWindow()
@@ -248,7 +257,7 @@ namespace CourseScheduleMaker
                         {
                             
                             ClassesView.Remove(viewedClasses);
-                           
+                            addedCourses.Items.Refresh();
                             break;
                         }
                         else if (viewedClasses.Course == course && viewedClasses.Group == group)
@@ -264,7 +273,7 @@ namespace CourseScheduleMaker
                             break;
                         }
                     }
-                   
+                   //TODO: add smth here for the fix
                     addedCourses.Items.Refresh();
                 }
             }
@@ -364,6 +373,13 @@ namespace CourseScheduleMaker
         private void MainWindow_Closed(object sender, EventArgs e)
         {
             DBSource.CloseConnection();
+        }
+
+        private void CourseGroups_Loaded(object sender, RoutedEventArgs e)
+        {
+            Group oldG = (sender as ComboBox).SelectedItem as Group;
+            Group newG = ((sender as ComboBox).Tag as Class).Group;
+            (sender as ComboBox).SelectedItem = newG;
         }
 
         /*private void CourseGroups_Loaded(object sender, RoutedEventArgs e)

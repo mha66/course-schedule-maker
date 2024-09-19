@@ -44,7 +44,6 @@ namespace CourseScheduleMaker
             {
                 if (existingGroup.Name == group.Name)
                 {
-                    //TODO: fix groups are duplicated
                     group.Courses[^1].AddGroup(existingGroup);
                     group.Courses[^1].RemoveGroup(group);
                     return existingGroup;
@@ -92,13 +91,21 @@ namespace CourseScheduleMaker
         public override bool Equals(object? obj)
         {
             return obj is Group group &&
-                   Id == group.Id &&
                    Name == group.Name;
         }
 
+        public static bool operator ==(Group? left, Group? right)
+        {
+            return EqualityComparer<Group>.Default.Equals(left, right);
+        }
+
+        public static bool operator !=(Group? left, Group? right)
+        {
+            return !(left == right);
+        }
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, Name);
+            return HashCode.Combine(Name);
         }
     }
 }

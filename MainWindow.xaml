@@ -61,14 +61,17 @@
                 <GridView AllowsColumnReorder="false" ColumnHeaderToolTip="Course Information">
                     <GridViewColumn DisplayMemberBinding="{Binding Path=Course.Code}" Header="Course Code" Width="100"/>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=Course.Name}" Header="Course Name" Width="100"/>
-                    <GridViewColumn Header="Group" Width="100">
+                    <!--TODO: selected group not showing properly-->
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Group.Name}"  Header="Group" Width="100"/>
+                    <GridViewColumn Header="Class" Width="100">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <ComboBox x:Name="courseGroups" SelectionChanged="CourseGroups_SelectionChanged" 
                                           IsSynchronizedWithCurrentItem="True"
+                                          Loaded="CourseGroups_Loaded"
                                           Tag="{Binding}"
                                           ItemTemplate="{StaticResource groupNameTemplate}" 
-                                          ItemsSource="{Binding Course.Groups}" 
+                                          ItemsSource="{Binding Course.Groups}"
                                           SelectedItem="{Binding Group}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>

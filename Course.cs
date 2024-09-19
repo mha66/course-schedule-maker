@@ -130,14 +130,13 @@ namespace CourseScheduleMaker
         public override bool Equals(object? obj)
         {
             return obj is Course course &&
-                   Id == course.Id &&
                    Name == course.Name &&
                    Code == course.Code;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, Name, Code);
+            return HashCode.Combine(Name, Code);
         }
 
         public static bool operator ==(Course? left, Course? right)

@@ -68,8 +68,6 @@ namespace CourseScheduleMaker
         }
 
 
-        //TODO: fix creating new groups for old courses not showing up in the course's combo box
-        //TODO: fix creating new groups for old courses duplicating the course in the courses combo box
         private void CreateCourseBtn_Click(object sender, RoutedEventArgs e)
         {
 
