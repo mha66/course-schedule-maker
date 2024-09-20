@@ -69,12 +69,10 @@
                             <DataTemplate>
                                 <ComboBox x:Name="courseGroups" SelectionChanged="CourseGroups_SelectionChanged" 
                                           IsSynchronizedWithCurrentItem="True"
-                                          Initialized="courseGroups_Initialized"
                                           Loaded="CourseGroups_Loaded"
                                           Tag="{Binding}"
                                           ItemTemplate="{StaticResource groupNameTemplate}" 
-                                          ItemsSource="{Binding Course.Groups}"
-                                          SelectedItem="{Binding Group}"/>
+                                          ItemsSource="{Binding Course.Groups}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

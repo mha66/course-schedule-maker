@@ -285,21 +285,17 @@ namespace CourseScheduleMaker
                         {
                             ClassesView.Add(classes);
                             addedCourses.Items.Refresh();
-                            
-                            MessageBox.Show(classes.ToString());
                             break;
                         }
                     }
-                    //TODO: add smth here for the fix
-                    //addedCourses.Items.Refresh();
                 }
             }
             catch (Exception ex) { Console.WriteLine(ex.ToString()); }
         }
+
+        //TODO: calling this method several times causes an infinite loop and a crash
         private void CourseGroups_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            MessageBox.Show("hi");
-
             int pos = ClassesView!.Count - 1;
             Class? newClasses = (sender as ComboBox)!.Tag as Class;
             foreach (Class classes in ClassesView!)
@@ -382,66 +378,16 @@ namespace CourseScheduleMaker
 
         private void CourseGroups_Loaded(object sender, RoutedEventArgs e)
         {
-            //int pos = ClassesView!.Count - 1;
-            Class? oldClasses = (sender as ComboBox)!.Tag as Class, newClasses = oldClasses;
-
-            
-            //foreach (Class classes in ClassesView!)
-            //    if (classes.Group != oldClasses!.Group && classes.Course == oldClasses.Course)
-            //    {
-            //        //(addedCourses.Items[^1] as Class).Group = classes.Group;
-            //        newClasses = classes;
-            //        break;
-            //    }
-            //foreach(Group group in (sender as ComboBox)!.Items)
-            //{
-            //    if(group == newClasses!.Group)
-            //        (sender as ComboBox)!.SelectedIndex = (sender as ComboBox)!.Items.IndexOf(group);
-
-            //}
-            //foreach(Class classes in ClassesView!)
-            //{
-            //    if(classes.Group == oldClasses!.Group && classes.Course == oldClasses.Course)
-            //    {
-            //        e.Handled = true;
-            //        return;
-            //    }
-            //    if (classes.Group != oldClasses!.Group && classes.Course == oldClasses.Course)
-            //    {
-            //        oldClasses.Group = classes.Group;
-            //        break;
-            //    }
-            //}
-
-            MessageBox.Show(addedCourses.Items[^1].ToString());
-
-        }
-
-        private void courseGroups_Initialized(object sender, EventArgs e)
-        {
-            Class? oldClasses = (sender as ComboBox)!.Tag as Class, newClasses = oldClasses;
-            foreach (Class classes in ClassesView!)
-                if (classes.Group != oldClasses!.Group && classes.Course == oldClasses.Course)
-                {
-                    //(addedCourses.Items[^1] as Class).Group = classes.Group;
-                    newClasses = classes;
-                    break;
-                }
-            
-            foreach (Group group in (sender as ComboBox)!.Items)
+            if ((sender as ComboBox)!.GetBindingExpression(ComboBox.SelectedItemProperty) == null)
             {
-                if (group == newClasses!.Group)
-                    (sender as ComboBox)!.SelectedIndex = (sender as ComboBox)!.Items.IndexOf(group);
-
+                Binding binding = new Binding("Group");
+                binding.Source = (sender as ComboBox)!.Tag as Class; 
+                (sender as ComboBox)!.SetBinding(ComboBox.SelectedItemProperty, binding);
             }
+            //Task.WaitAll(new Task[] { Task.Delay(1000) });
+
         }
 
-        /*private void CourseGroups_Loaded(object sender, RoutedEventArgs e)
-        {
-            var comboBox = sender as ComboBox;
-            comboBox.SelectedItem = (comboBox.Tag as Class).Group;
-            
-        }*/
 
     }
 }
