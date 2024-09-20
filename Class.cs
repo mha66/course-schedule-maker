@@ -11,16 +11,25 @@ using System.Windows;
 
 namespace CourseScheduleMaker
 {
-    public class Class : DBObject
+    public class Class : DBObject, INotifyPropertyChanged
     {
+        private Group? _group;
         public static Dictionary<int, Class> IdToClass = new Dictionary<int, Class>();
         public static int MaxId { get => DBSource.GetMaxId(IdToClass); }
         public override string Name { get => $"{Course!.Code} {Group!.Name}"; }
         public Course? Course { get; set; }
         public List<Session> Sessions = new List<Session>(3);
 
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-        public Group? Group {  get; set; }
+        public Group? Group {  
+            get => _group; 
+            set 
+            {
+                _group = value;
+                OnPropertyChanged();
+            } 
+        }
 
        public Class() : base(-1)
         {
@@ -88,6 +97,10 @@ namespace CourseScheduleMaker
         public void RemoveSession(Session session) 
         {
             Sessions.Remove(session);
+        }
+        protected void OnPropertyChanged([CallerMemberName] string? name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 }

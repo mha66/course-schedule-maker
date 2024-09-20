@@ -170,28 +170,28 @@ namespace CourseScheduleMaker
 
         private void RemoveSession(TextBlock sessionTextBlock, string? sessionToRemove)
         {
-            var Inlines = sessionTextBlock.Inlines;
+            var inlines = sessionTextBlock.Inlines;
             //a clash occurs if there's more than one Inline in the TextBlock
-            if (Inlines.Count > 1)
+            if (inlines.Count > 1)
             {
                 //index of current inline 
                 int i = 0;
-                foreach (var inline in Inlines)
+                foreach (var inline in inlines)
                 {
                     var inlineText = new TextRange(inline.ContentStart, inline.ContentEnd);
                     if (inlineText.Text == sessionToRemove!.ToString())
                     {
                         //Remove Xs (RemoveAt() is missing for some reason) 
-                        Inlines.Remove(Inlines.ElementAt((i == 0) ? 1 : i - 1));
+                        inlines.Remove(inlines.ElementAt((i == 0) ? 1 : i - 1));
                         //Remove session info
-                        Inlines.Remove(inline);
+                        inlines.Remove(inline);
                         break;
                     }
                     i++;
                 }
             }
             else
-                Inlines.Clear();
+                inlines.Clear();
         }
 
 
@@ -242,6 +242,21 @@ namespace CourseScheduleMaker
             }
         }
 
+
+        private void coursesComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Course c = (Course)coursesComboBox.SelectedItem;
+       
+            GroupsView!.Clear();
+            foreach (Group g in c.Groups)
+                GroupsView.Add(g);
+        }
+
+        private void groupsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // TODO: do something?
+        }
+
         private void AddCourseBtn_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -255,7 +270,7 @@ namespace CourseScheduleMaker
 
                         if (viewedClasses.Course == course && viewedClasses.Group != group)
                         {
-                            
+
                             ClassesView.Remove(viewedClasses);
                             addedCourses.Items.Refresh();
                             break;
@@ -270,31 +285,20 @@ namespace CourseScheduleMaker
                         {
                             ClassesView.Add(classes);
                             addedCourses.Items.Refresh();
+                            
+                            MessageBox.Show(classes.ToString());
                             break;
                         }
                     }
-                   //TODO: add smth here for the fix
-                    addedCourses.Items.Refresh();
+                    //TODO: add smth here for the fix
+                    //addedCourses.Items.Refresh();
                 }
             }
             catch (Exception ex) { Console.WriteLine(ex.ToString()); }
         }
-
-        private void coursesComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            Course c = (Course)coursesComboBox.SelectedItem;
-            GroupsView!.Clear();
-            foreach (Group g in c.Groups)
-                GroupsView.Add(g);
-        }
-
-        private void groupsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // TODO: do something?
-        }
-
         private void CourseGroups_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            MessageBox.Show("hi");
 
             int pos = ClassesView!.Count - 1;
             Class? newClasses = (sender as ComboBox)!.Tag as Class;
@@ -351,14 +355,15 @@ namespace CourseScheduleMaker
                     break;
                 }
             }
+            
 
             foreach (Class classes in newClasses!.Group.Classes)
             {
                 if (classes.Course.Code == newClasses.Course.Code)
                 {
                     ClassesView.Add(classes);
-                   
                     addedCourses.Items.Refresh();
+                   
                     break;
                 }
             }
@@ -377,9 +382,58 @@ namespace CourseScheduleMaker
 
         private void CourseGroups_Loaded(object sender, RoutedEventArgs e)
         {
-            Group oldG = (sender as ComboBox).SelectedItem as Group;
-            Group newG = ((sender as ComboBox).Tag as Class).Group;
-            (sender as ComboBox).SelectedItem = newG;
+            //int pos = ClassesView!.Count - 1;
+            Class? oldClasses = (sender as ComboBox)!.Tag as Class, newClasses = oldClasses;
+
+            
+            //foreach (Class classes in ClassesView!)
+            //    if (classes.Group != oldClasses!.Group && classes.Course == oldClasses.Course)
+            //    {
+            //        //(addedCourses.Items[^1] as Class).Group = classes.Group;
+            //        newClasses = classes;
+            //        break;
+            //    }
+            //foreach(Group group in (sender as ComboBox)!.Items)
+            //{
+            //    if(group == newClasses!.Group)
+            //        (sender as ComboBox)!.SelectedIndex = (sender as ComboBox)!.Items.IndexOf(group);
+
+            //}
+            //foreach(Class classes in ClassesView!)
+            //{
+            //    if(classes.Group == oldClasses!.Group && classes.Course == oldClasses.Course)
+            //    {
+            //        e.Handled = true;
+            //        return;
+            //    }
+            //    if (classes.Group != oldClasses!.Group && classes.Course == oldClasses.Course)
+            //    {
+            //        oldClasses.Group = classes.Group;
+            //        break;
+            //    }
+            //}
+
+            MessageBox.Show(addedCourses.Items[^1].ToString());
+
+        }
+
+        private void courseGroups_Initialized(object sender, EventArgs e)
+        {
+            Class? oldClasses = (sender as ComboBox)!.Tag as Class, newClasses = oldClasses;
+            foreach (Class classes in ClassesView!)
+                if (classes.Group != oldClasses!.Group && classes.Course == oldClasses.Course)
+                {
+                    //(addedCourses.Items[^1] as Class).Group = classes.Group;
+                    newClasses = classes;
+                    break;
+                }
+            
+            foreach (Group group in (sender as ComboBox)!.Items)
+            {
+                if (group == newClasses!.Group)
+                    (sender as ComboBox)!.SelectedIndex = (sender as ComboBox)!.Items.IndexOf(group);
+
+            }
         }
 
         /*private void CourseGroups_Loaded(object sender, RoutedEventArgs e)
