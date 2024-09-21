@@ -9,12 +9,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using CourseScheduleMaker.Views;
 
-namespace CourseScheduleMaker
+namespace CourseScheduleMaker.Models
 {
     public class Course : DBObject
     {
-    
+
         public string Code { get; set; }
 
         public static Dictionary<int, Course> IdToCourse = new Dictionary<int, Course>();
@@ -22,11 +23,11 @@ namespace CourseScheduleMaker
         // *****type could just be List<Group>
         public ObservableCollection<Group> Groups { get; set; } = new ObservableCollection<Group>();
         public ObservableCollection<Class> Classes { get; set; } = new ObservableCollection<Class>();
-        
+
         public List<string> Professors { get; set; } = new List<string>();
         public List<string> TAs { get; set; } = new List<string>();
 
-        
+
         public Course() : base(-1, "EXCOURSE")
         {
             ExistingOrNew(this);

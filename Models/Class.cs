@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace CourseScheduleMaker
+namespace CourseScheduleMaker.Models
 {
     public class Class : DBObject, INotifyPropertyChanged
     {
@@ -22,16 +22,17 @@ namespace CourseScheduleMaker
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public Group? Group {  
-            get => _group; 
-            set 
+        public Group? Group
+        {
+            get => _group;
+            set
             {
                 _group = value;
                 OnPropertyChanged();
-            } 
+            }
         }
 
-       public Class() : base(-1)
+        public Class() : base(-1)
         {
             Course = new Course();
             Group = new Group();
@@ -94,7 +95,7 @@ namespace CourseScheduleMaker
                 session.Group = Group!;
             }
         }
-        public void RemoveSession(Session session) 
+        public void RemoveSession(Session session)
         {
             Sessions.Remove(session);
         }

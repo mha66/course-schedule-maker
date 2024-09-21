@@ -2,14 +2,15 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:CourseScheduleMaker"
+             xmlns:model="clr-namespace:CourseScheduleMaker.Models"
              xmlns:sys="clr-namespace:System;assembly=mscorlib" 
-             StartupUri="MainWindow.xaml">
+             StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
         <ObjectDataProvider x:Key="SessionTypeSource"
                             ObjectType="{x:Type sys:Enum}"
                             MethodName="GetValues">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="local:SessionType"/>
+                <x:Type TypeName="model:SessionType"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <ObjectDataProvider x:Key="DayOfWeekSource"

@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CourseScheduleMaker
+namespace CourseScheduleMaker.Models
 {
     public class DBObject
     {
         public int Id { get; set; }
         public virtual string? Name { get; set; }
 
-        public DBObject() 
+        public DBObject()
         {
             Id = -1;
         }

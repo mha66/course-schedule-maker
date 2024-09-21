@@ -1,21 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data.SQLite;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CourseScheduleMaker.Views;
 
-namespace CourseScheduleMaker
+namespace CourseScheduleMaker.Models
 {
-    public class Group : DBObject
+    public class Group : DBObject, INotifyPropertyChanged
     {
 
         public static Dictionary<int, Group> IdToGroup = new Dictionary<int, Group>();
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         public static int MaxId { get => DBSource.GetMaxId(IdToGroup); }
         public ObservableCollection<Course> Courses { get; set; } = new ObservableCollection<Course>();
-        public List<Class> Classes { get; set; } = new List<Class>();
+        public ObservableCollection<Class> Classes { get; set; } = new ObservableCollection<Class>();
 
         public Group() : base(-1, "EXGROUP") { MainWindow.Groups.Add(this); }
         public Group(int id, string name) : base(id, name)
@@ -56,7 +62,7 @@ namespace CourseScheduleMaker
         }
         public void AddCourse(Course course)
         {
-            Courses.Add(course); 
+            Courses.Add(course);
         }
         public void RemoveCourse(Course course)
         {
@@ -74,7 +80,7 @@ namespace CourseScheduleMaker
             //   Courses.Add(courseClasses.Course);
             //   courseClasses.Course.Groups.Add(this);
             //}
-            
+
         }
 
         //***
@@ -106,6 +112,11 @@ namespace CourseScheduleMaker
         public override int GetHashCode()
         {
             return HashCode.Combine(Name);
+        }
+
+        protected void OnPropertyChanged([CallerMemberName] string? name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 }

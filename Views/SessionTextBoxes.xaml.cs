@@ -12,8 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CourseScheduleMaker.Models;
 
-namespace CourseScheduleMaker
+namespace CourseScheduleMaker.Views
 {
     /// <summary>
     /// Interaction logic for SessionTextBoxes.xaml

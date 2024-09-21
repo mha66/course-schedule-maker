@@ -5,7 +5,6 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -20,9 +19,10 @@ using System.Collections;
 using static System.Net.Mime.MediaTypeNames;
 using System.Windows.Controls.Primitives;
 using System.ComponentModel;
+using CourseScheduleMaker.Models;
 
 
-namespace CourseScheduleMaker
+namespace CourseScheduleMaker.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -293,31 +293,17 @@ namespace CourseScheduleMaker
             catch (Exception ex) { Console.WriteLine(ex.ToString()); }
         }
 
-        //TODO: calling this method several times causes an infinite loop and a crash
+
         private void CourseGroups_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             int pos = ClassesView!.Count - 1;
             Class? newClasses = (sender as ComboBox)!.Tag as Class;
-            foreach (Class classes in ClassesView!)
-            {
-                if (classes.Course == newClasses!.Course)
-                {
-                    pos = ClassesView.IndexOf(classes);
-                    ClassesView.Remove(classes);
-                    addedCourses.Items.Refresh();
-                    break;
-                }
-            }
+            var oldClass = ClassesView.First(classes => classes.Course == newClasses!.Course);
+            pos = ClassesView.IndexOf(oldClass);
+            ClassesView.Remove(oldClass);
+            addedCourses.Items.Refresh();
+            ClassesView.Insert(pos, newClasses!.Group!.Classes.First(classes => classes.Course == newClasses!.Course));
 
-            foreach (Class classes in newClasses!.Group.Classes)
-            {
-                if (classes.Course.Code == newClasses.Course.Code)
-                {
-                    ClassesView.Insert(pos, classes);
-                    addedCourses.Items.Refresh();
-                    break;
-                }
-            }
         }
         private void RemoveCourseBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -376,18 +362,32 @@ namespace CourseScheduleMaker
             DBSource.CloseConnection();
         }
 
+        //TODO: binding causes an infinite loop and a crash after changing combo box selection several times
         private void CourseGroups_Loaded(object sender, RoutedEventArgs e)
         {
-            if ((sender as ComboBox)!.GetBindingExpression(ComboBox.SelectedItemProperty) == null)
+            var hasBinding = (sender as ComboBox)!.GetBindingExpression(ComboBox.SelectedItemProperty);
+            if (hasBinding == null)
             {
                 Binding binding = new Binding("Group");
-                binding.Source = (sender as ComboBox)!.Tag as Class; 
+                //var newClass = (sender as ComboBox)!.Tag as Class;
+                //var oldClass = ClassesView!.First(classes => classes.Course == newClass!.Course);
+                binding.Source = (sender as ComboBox)!.Tag as Class;
                 (sender as ComboBox)!.SetBinding(ComboBox.SelectedItemProperty, binding);
             }
             //Task.WaitAll(new Task[] { Task.Delay(1000) });
 
         }
-
-
+        
+        //private void courseGroups_Initialized(object sender, EventArgs e)
+        //{
+        //     var hasBinding = (sender as ComboBox)!.GetBindingExpression(ComboBox.SelectedItemProperty);
+        //    if (hasBinding == null)
+        //    {
+        //        Binding binding = new Binding("Tag.Group");
+        //        //var newClass = (sender as ComboBox)!.Tag as Class;
+        //        binding.RelativeSource= RelativeSource.Self;
+        //        (sender as ComboBox)!.SetBinding(ComboBox.SelectedItemProperty, binding);
+        //    }
+        //}
     }
 }

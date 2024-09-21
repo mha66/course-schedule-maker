@@ -6,8 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using CourseScheduleMaker.Views;
 
-namespace CourseScheduleMaker
+namespace CourseScheduleMaker.Models
 {
     public enum SessionType
     {
@@ -27,8 +28,8 @@ namespace CourseScheduleMaker
         public Group Group { get; set; }
         public Class Class { get; set; }
         public SessionType Kind { get; set; }
-        public string Instructor {  get; set; }
-        public DayOfWeek Day {  get; set; }
+        public string Instructor { get; set; }
+        public DayOfWeek Day { get; set; }
         public int Period { get; set; }
 
         public Session() : base(-1)
