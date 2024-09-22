@@ -353,7 +353,7 @@ namespace CourseScheduleMaker.Views
 
         private void CreateCourseBtn_Click(object sender, RoutedEventArgs e)
         {
-            var createClassesWindow = new CreateClassesWindow();
+            var createClassesWindow = new ClassCreationView();
             createClassesWindow.Show();
         }
 

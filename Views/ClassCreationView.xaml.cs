@@ -17,17 +17,17 @@ using CourseScheduleMaker.ViewModels;
 namespace CourseScheduleMaker.Views
 {
     /// <summary>
-    /// Interaction logic for CreateClassesWindow.xaml
+    /// Interaction logic for ClassCreationView.xaml
     /// </summary>
     /// 
 
 
     //TODO: add feat to fill all textboxes with last made course info
-    public partial class CreateClassesWindow : Window
+    public partial class ClassCreationView : Window
     {
         public List<SessionTextBoxes> SessionBoxes { get; set; } = new List<SessionTextBoxes>();
         //public SessionType Kind { get; set; } = SessionType.Lec;
-        public CreateClassesWindow()
+        public ClassCreationView()
         {
             InitializeComponent();
         }
