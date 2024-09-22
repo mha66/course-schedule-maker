@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using CourseScheduleMaker.Models;
+using CourseScheduleMaker.ViewModels;
 
 namespace CourseScheduleMaker.Views
 {
@@ -34,15 +35,15 @@ namespace CourseScheduleMaker.Views
         private void SessionsNum_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox comboBox = (sender as ComboBox)!;
-            int oldCount = SessionTextBoxes.Count, newCount = 0;
+            int oldCount = SessionTextBoxesViewModel.Count, newCount = 0;
             newCount = int.Parse(comboBox.SelectedValue.ToString()!);
 
             if (oldCount < newCount)
             {
                 while (oldCount != newCount)
                 {
-                    var newSessionBoxes = new SessionTextBoxes() {Uid = "session" + SessionTextBoxes.Count };
-                    SessionTextBoxes.Count++;
+                    var newSessionBoxes = new SessionTextBoxes() {Uid = "session" + SessionTextBoxesViewModel.Count };
+                    SessionTextBoxesViewModel.Count++;
                     oldCount++;
                     creationGrid.Children.Add(newSessionBoxes);
                     SessionBoxes.Add(newSessionBoxes);
@@ -61,7 +62,7 @@ namespace CourseScheduleMaker.Views
                     creationGrid.Children.RemoveAt(
                         (creationGrid.Children[childrenCount - 1].Uid == "createBtn") ? childrenCount - 2 : childrenCount - 1);
                     SessionBoxes.RemoveAt(SessionBoxes.Count - 1);
-                    SessionTextBoxes.Count--;
+                    SessionTextBoxesViewModel.Count--;
                     oldCount--;
                 }
 
@@ -77,8 +78,9 @@ namespace CourseScheduleMaker.Views
             Class classes = new Class(course, group);
             foreach (SessionTextBoxes sessionBox in SessionBoxes)
             {
-                classes.AddSession(new Session(sessionBox.SessionKind, sessionBox.Instructor, 
-                    sessionBox.Day, sessionBox.Period));
+                var sessionViewModel = sessionBox.DataContext as SessionTextBoxesViewModel;
+                classes.AddSession(new Session(sessionViewModel!.SessionKind, sessionViewModel.Instructor!,
+                    sessionViewModel.Day, sessionViewModel.Period));
             }
             DBSource.InsertData(classes);
             //MainWindow.UpdateCourseGroupViews();

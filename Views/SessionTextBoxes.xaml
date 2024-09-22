@@ -4,9 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CourseScheduleMaker"
+             xmlns:ViewModels="clr-namespace:CourseScheduleMaker.ViewModels"
              xmlns:sys="clr-namespace:System;assembly=mscorlib" 
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -21,20 +23,24 @@
         <StackPanel Margin="0,5,10,0" Grid.Row="0" Grid.Column="0">
             <TextBlock>Type:</TextBlock>
             <ComboBox x:Name="sessionClassification" Margin="0,5,0,0" 
-                      ItemsSource="{Binding Source={StaticResource SessionTypeSource}}"/>
+                      ItemsSource="{Binding Source={StaticResource SessionTypeSource}}"
+                      SelectedItem="{Binding Path=SessionKind, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
         </StackPanel>
         <StackPanel Margin="0,5,10,0" Grid.Row="0" Grid.Column="1">
             <TextBlock>Instructor:</TextBlock>
-            <TextBox x:Name="sessionInstructor" Margin="0,5,0,0"/>
+            <TextBox x:Name="sessionInstructor" Margin="0,5,0,0" 
+                     Text="{Binding Path=Instructor, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
         </StackPanel>
         <StackPanel Margin="0,5,10,0" Grid.Row="1" Grid.Column="0">
             <TextBlock>Day:</TextBlock>
             <ComboBox x:Name="sessionDay" Margin="0,5,0,0" 
-                      ItemsSource="{Binding Source={StaticResource DayOfWeekSource}}"/>
+                      ItemsSource="{Binding Source={StaticResource DayOfWeekSource}}"
+                      SelectedItem="{Binding Path=Day, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
         </StackPanel>
         <StackPanel Margin="0,5,10,0" Grid.Row="1" Grid.Column="1">
             <TextBlock>Period:</TextBlock>
-            <ComboBox x:Name="sessionPeriod" Margin="0,5,0,0">
+            <ComboBox x:Name="sessionPeriod" Margin="0,5,0,0"
+                      SelectedItem="{Binding Path=Period, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                 <!--TODO: can be done in a better way-->
                     <sys:Int32>1</sys:Int32>
                     <sys:Int32>3</sys:Int32>
