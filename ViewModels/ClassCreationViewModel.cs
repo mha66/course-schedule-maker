@@ -48,8 +48,7 @@ namespace CourseScheduleMaker.ViewModels
             {
                 while (oldCount != newCount)
                 {
-                    var newSessionBoxes = new SessionTextBoxes() { Uid = "session" + SessionTextBoxesViewModel.Count };
-                    SessionTextBoxesViewModel.Count++;
+                    var newSessionBoxes = new SessionTextBoxes();
                     oldCount++;
                     SessionBoxes.Add(newSessionBoxes);
                 }
@@ -60,7 +59,6 @@ namespace CourseScheduleMaker.ViewModels
                 while (oldCount != newCount)
                 {
                     SessionBoxes.RemoveAt(SessionBoxes.Count - 1);
-                    SessionTextBoxesViewModel.Count--;
                     oldCount--;
                 }
 

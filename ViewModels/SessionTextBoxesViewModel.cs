@@ -13,7 +13,6 @@ namespace CourseScheduleMaker.ViewModels
 
     public class SessionTextBoxesViewModel : ObservableObject
     {
-        public static int Count { get; set; } = 0;
 
         public SessionType SessionKind { get; set; }
         public string? Instructor { get; set; }

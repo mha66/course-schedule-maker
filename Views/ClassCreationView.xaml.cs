@@ -21,8 +21,6 @@ namespace CourseScheduleMaker.Views
     /// </summary>
     /// 
 
-
-
     public partial class ClassCreationView : Window
     {
        
