@@ -4,16 +4,19 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CourseScheduleMaker"
-        
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:vm="clr-namespace:CourseScheduleMaker.ViewModels"
         xmlns:sys="clr-namespace:System;assembly=mscorlib" 
         mc:Ignorable="d"
         Title="ClassCreationView" Height="450" Width="800">
+    <Window.DataContext>
+        <vm:ClassCreationViewModel x:Name="ViewModel"/>
+    </Window.DataContext>
     <Window.Resources>
    
     </Window.Resources>
     <Grid HorizontalAlignment="Center" x:Name="creationGrid">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -25,28 +28,40 @@
         </Grid.ColumnDefinitions>
         <StackPanel Margin="0,5,10,0">
             <TextBlock>Name:</TextBlock>
-            <TextBox x:Name="courseName" Margin="0,5,0,0"/>
+            <TextBox x:Name="courseName" Margin="0,5,0,0" 
+                     Text="{Binding CourseName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
         </StackPanel>
         <StackPanel Margin="0,5,10,0" Grid.Column="1">
             <TextBlock>Code:</TextBlock>
-            <TextBox x:Name="courseCode" Margin="0,5,0,0"/>
+            <TextBox x:Name="courseCode" Margin="0,5,0,0"
+                     Text="{Binding CourseCode, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
         </StackPanel>
         <StackPanel Margin="0,5,10,0" Grid.Row="1" Grid.Column="0">
             <TextBlock>Group:</TextBlock>
-            <TextBox x:Name="courseGroup" Margin="0,5,0,0"/>
+            <TextBox x:Name="courseGroup" Margin="0,5,0,0"
+                     Text="{Binding CourseGroup, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
         </StackPanel>
         <StackPanel Margin="0,5,10,0" Grid.Row="1" Grid.Column="1">
             <TextBlock>Number of sessions:</TextBlock>
-            <ComboBox x:Name="sessionsNum" Margin="0,5,0,0" SelectedIndex="1" 
-                      SelectionChanged="SessionsNum_SelectionChanged"
-                      SelectedValuePath="Content" >
-                <ComboBoxItem Content="1"/>
-                <ComboBoxItem Content="2"/>
-                <ComboBoxItem Content="3"/>
-                <ComboBoxItem Content="4"/>
+            <ComboBox x:Name="sessionsNum" Margin="0,5,0,0"
+                      ItemsSource="{Binding SessionsNums, Mode=TwoWay}"
+                      SelectedItem="{Binding SelectedSessionsNum, Mode=TwoWay}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding SessionsNum_SelectionChangedCmd}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
             </ComboBox>
         </StackPanel>
-        <Button x:Name="createCourseBtn" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" 
-                Margin="30" x:Uid="createBtn" Click="CreateCourseBtn_Click">Create</Button>
+        <ItemsControl x:Name="sessionsControl" Grid.Row="2" Grid.ColumnSpan="2" 
+                      ItemsSource="{Binding SessionBoxes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="2" Rows="2"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+        <Button x:Name="createCourseBtn" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" 
+                Margin="30" x:Uid="createBtn" Command="{Binding CreateCourse_ClickCmd}">Create</Button>
     </Grid>
 </Window>
