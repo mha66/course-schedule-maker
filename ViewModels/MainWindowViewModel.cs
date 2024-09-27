@@ -14,6 +14,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows;
 using System.Configuration;
+using System.Windows.Input;
 
 namespace CourseScheduleMaker.ViewModels
 {
@@ -40,7 +41,44 @@ namespace CourseScheduleMaker.ViewModels
         public static ObservableCollection<Course> Courses { get; set; } = new ObservableCollection<Course>();
         public static ObservableCollection<Group> Groups { get; set; } = new ObservableCollection<Group>();
         //public static ObservableCollection<Class> Classes { get; set; } = new ObservableCollection<Class>();
+        #region Commands
+        public ICommand CoursesComboBox_SelectionChangedCmd { get; private set; }
+        public ICommand AddCourseBtn_ClickCmd { get; private set; }
+        public ICommand CourseGroups_SelectionChangedCmd { get; private set; }
+        public ICommand RemoveCourseBtn_ClickCmd { get; private set; }
+        public ICommand ModifyCourseBtn_ClickCmd { get; private set; }
+        public ICommand CreateCourseBtn_ClickCmd { get; private set; }
+        public ICommand MainWindow_ClosedCmd { get; private set; }
+        public ICommand CourseGroups_LoadedCmd { get; private set; }
+        #endregion
 
+        public MainWindowViewModel()
+        {
+
+            DBSource.Initialize();
+            DBSource.ReadData();
+
+            // TODO: find a better place for the following two lines
+            GroupsView = new ObservableCollection<Group>(Groups);
+            CoursesView = new ObservableCollection<Course>(Courses);
+
+
+            ClassesView!.CollectionChanged += ClassesView_CollectionChanged!;
+            Courses.CollectionChanged += Courses_CollectionChanged!;
+            Groups.CollectionChanged += Groups_CollectionChanged!;
+
+            SetupScheduleGrid();
+
+            CoursesComboBox_SelectionChangedCmd = new RelayCommand(coursesComboBox_SelectionChanged);
+            AddCourseBtn_ClickCmd = new RelayCommand(AddCourseBtn_Click);
+            CourseGroups_SelectionChangedCmd = new RelayCommand<Class>(CourseGroups_SelectionChanged);
+            RemoveCourseBtn_ClickCmd = new RelayCommand<string>(RemoveCourseBtn_Click);
+            ModifyCourseBtn_ClickCmd = new RelayCommand<Class>(ModifyCourseBtn_Click);
+            CreateCourseBtn_ClickCmd = new RelayCommand(CreateCourseBtn_Click);
+            MainWindow_ClosedCmd = new RelayCommand(MainWindow_Closed);
+            CourseGroups_LoadedCmd = new RelayCommand<ComboBox>(CourseGroups_Loaded);
+
+        }
 
         private static void AddCourseView(Course course)
         {
@@ -76,25 +114,7 @@ namespace CourseScheduleMaker.ViewModels
             AddCourseView(Courses[^1]);
 
         }
-        public MainWindowViewModel()
-        {
-
-            
-            DBSource.Initialize();
-            DBSource.ReadData();
-
-            // TODO: find a better place for the following two lines
-            GroupsView = new ObservableCollection<Group>(Groups);
-            CoursesView = new ObservableCollection<Course>(Courses);
-
-
-            ClassesView!.CollectionChanged += ClassesView_CollectionChanged!;
-            Courses.CollectionChanged += Courses_CollectionChanged!;
-            Groups.CollectionChanged += Groups_CollectionChanged!;
-
-            SetupScheduleGrid();
-            
-        }
+       
 
         private void AddToSchedule(TextBlock textBlock, int row, int column)
         {
@@ -223,7 +243,7 @@ namespace CourseScheduleMaker.ViewModels
         }
 
 
-        private void coursesComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void coursesComboBox_SelectionChanged()
         {
 
             GroupsView!.Clear();
@@ -231,12 +251,12 @@ namespace CourseScheduleMaker.ViewModels
                 GroupsView.Add(g);
         }
 
-        private void groupsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void groupsComboBox_SelectionChanged()
         {
             // TODO: do something?
         }
 
-        private void AddCourseBtn_Click(object sender, RoutedEventArgs e)
+        private void AddCourseBtn_Click()
         {
             try
             {
@@ -273,10 +293,10 @@ namespace CourseScheduleMaker.ViewModels
         }
 
 
-        private void CourseGroups_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CourseGroups_SelectionChanged(Class? newClasses)
         {
             int pos = ClassesView!.Count - 1;
-            Class? newClasses = (sender as ComboBox)!.Tag as Class;
+            //Class? newClasses = (sender as ComboBox)!.Tag as Class;
             var oldClass = ClassesView.First(classes => classes.Course == newClasses!.Course);
             pos = ClassesView.IndexOf(oldClass);
             ClassesView.Remove(oldClass);
@@ -284,13 +304,13 @@ namespace CourseScheduleMaker.ViewModels
             ClassesView.Insert(pos, newClasses!.Group!.Classes.First(classes => classes.Course == newClasses!.Course));
 
         }
-        private void RemoveCourseBtn_Click(object sender, RoutedEventArgs e)
+        private void RemoveCourseBtn_Click(string? courseCode)
         {
 
-            Button button = (sender as Button)!;
+           // Button button = (sender as Button)!;
             foreach (var classes in ClassesView!)
             {
-                if (classes.Course!.Code == button.Tag.ToString())
+                if (classes.Course!.Code == courseCode)
                 {
                     ClassesView.Remove(classes);
                     break;
@@ -300,10 +320,10 @@ namespace CourseScheduleMaker.ViewModels
 
 
         //TODO: remove modify button
-        private void ModifyCourseBtn_Click(object sender, RoutedEventArgs e)
+        private void ModifyCourseBtn_Click(Class? newClasses)
         {
 
-            Class? newClasses = (sender as Button)!.Tag as Class;
+            //Class? newClasses = (sender as Button)!.Tag as Class;
             foreach (Class classes in ClassesView!)
             {
                 if (classes.Course == newClasses!.Course)
@@ -330,28 +350,28 @@ namespace CourseScheduleMaker.ViewModels
             }
         }
 
-        private void CreateCourseBtn_Click(object sender, RoutedEventArgs e)
+        private void CreateCourseBtn_Click()
         {
             var createClassesWindow = new ClassCreationView();
             createClassesWindow.Show();
         }
 
-        private void MainWindow_Closed(object sender, EventArgs e)
+        private void MainWindow_Closed()
         {
             DBSource.CloseConnection();
         }
 
         //TODO: binding causes an infinite loop and a crash after changing combo box selection several times
-        private void CourseGroups_Loaded(object sender, RoutedEventArgs e)
+        private void CourseGroups_Loaded(ComboBox? comboBox)
         {
-            var hasBinding = (sender as ComboBox)!.GetBindingExpression(ComboBox.SelectedItemProperty);
+            var hasBinding = comboBox.GetBindingExpression(ComboBox.SelectedItemProperty);
             if (hasBinding == null)
             {
                 Binding binding = new Binding("Group");
                 //var newClass = (sender as ComboBox)!.Tag as Class;
                 //var oldClass = ClassesView!.First(classes => classes.Course == newClass!.Course);
-                binding.Source = (sender as ComboBox)!.Tag as Class;
-                (sender as ComboBox)!.SetBinding(ComboBox.SelectedItemProperty, binding);
+                binding.Source = comboBox.Tag as Class;
+                comboBox.SetBinding(ComboBox.SelectedItemProperty, binding);
             }
             //Task.WaitAll(new Task[] { Task.Delay(1000) });
 
