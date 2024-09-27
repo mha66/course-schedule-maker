@@ -2,13 +2,19 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CourseScheduleMaker"
+        xmlns:vm="clr-namespace:CourseScheduleMaker.ViewModels" 
+       
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" x:Name="mainWindow"
-        
-        Closed="MainWindow_Closed"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+        Title="MainWindow" Height="450" Width="800" x:Name="mainWindow">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closed">
+            <i:InvokeCommandAction Command="{Binding MainWindow_ClosedCmd}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <Window.Resources>
         <DataTemplate x:Key="courseNameTemplate">
             <TextBlock>
@@ -46,13 +52,19 @@
                 <ComboBox x:Name="coursesComboBox" Margin="10,0,0,0" 
                           ItemTemplate="{StaticResource courseNameTemplate}" 
                           ItemsSource="{Binding Path=CoursesView}"
-                          SelectionChanged="coursesComboBox_SelectionChanged"/>
+                          SelectedItem="{Binding SelectedCourse, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding CoursesComboBox_SelectionChangedCmd}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
                 <ComboBox x:Name="groupsComboBox" Margin="30,0,0,0"
                           ItemTemplate="{StaticResource groupNameTemplate}" 
                           ItemsSource="{Binding Path=GroupsView}"
-                          SelectionChanged="groupsComboBox_SelectionChanged"/>
-                <Button x:Name="addCourseBtn" Margin="20,0,0,0" Click="AddCourseBtn_Click">Add</Button>
-                <Button x:Name="createCourseBtn" Margin="20,0,0,0" Click="CreateCourseBtn_Click">Create</Button>
+                          SelectedItem="{Binding SelectedGroup, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button x:Name="addCourseBtn" Margin="20,0,0,0" Command="{Binding AddCourseBtn_ClickCmd}">Add</Button>
+                <Button x:Name="createCourseBtn" Margin="20,0,0,0" Command="{Binding CreateCourseBtn_ClickCmd}">Create</Button>
             </StackPanel>
         </DockPanel>
         <Label Grid.Row="3" Content="l"/>
@@ -67,12 +79,23 @@
                     <GridViewColumn Header="Class" Width="100">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <ComboBox x:Name="courseGroups" SelectionChanged="CourseGroups_SelectionChanged" 
+                                <ComboBox x:Name="courseGroups" 
                                           IsSynchronizedWithCurrentItem="True"
-                                          Loaded="CourseGroups_Loaded"
-                                          Tag="{Binding}"
                                           ItemTemplate="{StaticResource groupNameTemplate}" 
-                                          ItemsSource="{Binding Course.Groups}"/>
+                                          ItemsSource="{Binding Course.Groups}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="SelectionChanged">
+                                            <i:InvokeCommandAction 
+                                                Command="{Binding DataContext.CourseGroups_SelectionChangedCmd, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                CommandParameter="{Binding}"/>
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="Loaded">
+                                            <i:InvokeCommandAction 
+                                                Command="{Binding DataContext.CourseGroups_LoadedCmd, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                CommandParameter="{Binding ElementName=courseGroups}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </ComboBox>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -80,14 +103,17 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <!--TODO: should bind Tag to Course.Id -->
-                                <Button x:Name="removeCourseBtn" Tag="{Binding Course.Code}" Click="RemoveCourseBtn_Click">X</Button>
+                                <Button x:Name="removeCourseBtn" 
+                                        Command="{Binding DataContext.RemoveCourseBtn_ClickCmd, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                        CommandParameter="{Binding Course.Code}">X</Button>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Modify" Width="100">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button x:Name="modifyCourseBtn" Tag="{Binding}" Click="ModifyCourseBtn_Click">M</Button>
+                                <Button x:Name="modifyCourseBtn"  Command="{Binding DataContext.ModifyCourseBtn_ClickCmd, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                        CommandParameter="{Binding}">M</Button>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -96,6 +122,6 @@
         </ListView>
 
         <!--TODO: create row and column headers in xaml instead of using code-->
-        <Grid x:Name="scheduleGrid" Grid.Row="2" Grid.Column="0" ShowGridLines="True" Margin="0,40,0,0"/>
+        <ContentControl Content="{Binding ScheduleGridUI}" Grid.Row="2" Grid.Column="0" />
     </Grid>
 </Window>

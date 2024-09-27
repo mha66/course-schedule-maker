@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using CourseScheduleMaker.Models;
+using CourseScheduleMaker.ViewModels;
 using CourseScheduleMaker.Views;
 
 namespace CourseScheduleMaker
@@ -257,12 +258,12 @@ namespace CourseScheduleMaker
                 {
                     case "Course":
                         var course = new Course(reader);
-                        MainWindow.Courses.Add(course);
+                        MainWindowViewModel.Courses.Add(course);
                         break;
 
                     case "\"Group\"":
                         var group = new Group(reader);
-                        MainWindow.Groups.Add(group);
+                        MainWindowViewModel.Groups.Add(group);
                         break;
 
                     case "CourseGroup":

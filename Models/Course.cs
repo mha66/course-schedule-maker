@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using CourseScheduleMaker.ViewModels;
 using CourseScheduleMaker.Views;
 
 namespace CourseScheduleMaker.Models
@@ -68,7 +69,7 @@ namespace CourseScheduleMaker.Models
 
         public static Course ExistingOrNew(Course course)
         {
-            foreach (var existingCourse in MainWindow.Courses)
+            foreach (var existingCourse in MainWindowViewModel.Courses)
             {
                 if (existingCourse.Code == course.Code)
                 {
@@ -77,7 +78,7 @@ namespace CourseScheduleMaker.Models
             }
             course.Id = MaxId + 1;
             IdToCourse.Add(course.Id, course);
-            MainWindow.Courses.Add(course);
+            MainWindowViewModel.Courses.Add(course);
             return course;
         }
 

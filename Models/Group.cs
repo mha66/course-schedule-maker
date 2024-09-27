@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CourseScheduleMaker.ViewModels;
 using CourseScheduleMaker.Views;
 
 namespace CourseScheduleMaker.Models
@@ -23,7 +24,7 @@ namespace CourseScheduleMaker.Models
         public ObservableCollection<Course> Courses { get; set; } = new ObservableCollection<Course>();
         public ObservableCollection<Class> Classes { get; set; } = new ObservableCollection<Class>();
 
-        public Group() : base(-1, "EXGROUP") { MainWindow.Groups.Add(this); }
+        public Group() : base(-1, "EXGROUP") { MainWindowViewModel.Groups.Add(this); }
         public Group(int id, string name) : base(id, name)
         {
             ExistingOrNew(this);
@@ -46,7 +47,7 @@ namespace CourseScheduleMaker.Models
         }
         public static Group ExistingOrNew(Group group)
         {
-            foreach (var existingGroup in MainWindow.Groups)
+            foreach (var existingGroup in MainWindowViewModel.Groups)
             {
                 if (existingGroup.Name == group.Name)
                 {
@@ -57,7 +58,7 @@ namespace CourseScheduleMaker.Models
             }
             group.Id = MaxId + 1;
             IdToGroup.Add(group.Id, group);
-            MainWindow.Groups.Add(group);
+            MainWindowViewModel.Groups.Add(group);
             return group;
         }
         public void AddCourse(Course course)
