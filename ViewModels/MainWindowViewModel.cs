@@ -30,7 +30,7 @@ namespace CourseScheduleMaker.ViewModels
 
         // TextBlock[,] courseBlocks = new TextBlock[7, 17];
         TextBlock[,] ScheduleGrid { get; set; } = new TextBlock[ROWS, COLUMNS];
-        public ObservableCollection<TextBlock> ScheduleChildren { get; set; } = new ObservableCollection<TextBlock>();
+        //public ObservableCollection<TextBlock> ScheduleChildren { get; set; } = new ObservableCollection<TextBlock>();
         //ViewModel
         public ObservableCollection<Class>? ClassesView
         {
@@ -70,7 +70,7 @@ namespace CourseScheduleMaker.ViewModels
             Groups.CollectionChanged += Groups_CollectionChanged!;
 
             ScheduleGridUI = new Grid() { ShowGridLines = true };
-            SetupScheduleGrid1();
+            SetupScheduleGrid();
 
             CoursesComboBox_SelectionChangedCmd = new RelayCommand(coursesComboBox_SelectionChanged);
             AddCourseBtn_ClickCmd = new RelayCommand(AddCourseBtn_Click);
@@ -121,11 +121,14 @@ namespace CourseScheduleMaker.ViewModels
 
         private void AddToSchedule(TextBlock textBlock, int row, int column)
         {
-            ScheduleChildren.Insert(row * COLUMNS + column, textBlock);
+            ScheduleGridUI.Children.Add(textBlock);
+            Grid.SetRow(textBlock, row);
+            Grid.SetColumn(textBlock, column);
             ScheduleGrid[row, column] = textBlock;
         }
 
-        //TODO: optimize this
+       
+        /*
         private void SetupScheduleGrid1()
         {
             //adds row and column definitions
@@ -175,12 +178,17 @@ namespace CourseScheduleMaker.ViewModels
                     if (!ScheduleGridUI.Children.Contains(tb)) //???
                         ScheduleGridUI.Children.Add(tb);
                 }
-        }
+        }*/
 
 
-        //TODO: remove this
         private void SetupScheduleGrid()
         {
+            for (int i = 0; i < 18; i++)
+            {
+                ScheduleGridUI.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
+                if (i < 8)
+                    ScheduleGridUI.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
+            }
             //ScheduleChildren.Add(new TextBlock() { Text = "Days/Period" });
             //adds row and column definitions
             for (int i = 0; i < ROWS; i++)
@@ -190,7 +198,7 @@ namespace CourseScheduleMaker.ViewModels
 
                     var textBlock = new TextBlock()
                     {
-                        //Margin = new Thickness(5, 10, 0 , 0),
+                        Margin = new Thickness(5, 10, 5 , 0),
 
                         Text = (i == 0 && j == 0) ? "Days/Period" :
                         (i == 0) ? j.ToString() :
