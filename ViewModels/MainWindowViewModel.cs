@@ -28,21 +28,17 @@ namespace CourseScheduleMaker.ViewModels
         public static ObservableCollection<Group>? GroupsView { get; set; }
         public Group? SelectedGroup { get; set; }
 
-        // TextBlock[,] courseBlocks = new TextBlock[7, 17];
         TextBlock[,] ScheduleGrid { get; set; } = new TextBlock[ROWS, COLUMNS];
-        //public ObservableCollection<TextBlock> ScheduleChildren { get; set; } = new ObservableCollection<TextBlock>();
-        //ViewModel
+
         public ObservableCollection<Class>? ClassesView
         {
             get => _classesView;
             set => SetProperty(ref _classesView, value);
         }
-        //DBSource
         public static ObservableCollection<Course> Courses { get; set; } = new ObservableCollection<Course>();
         public static ObservableCollection<Group> Groups { get; set; } = new ObservableCollection<Group>();
-        //public static ObservableCollection<Class> Classes { get; set; } = new ObservableCollection<Class>();
+        public Grid? ScheduleGridUI { get; set; }
 
-        public Grid ScheduleGridUI { get; set; }
         #region Commands
         public ICommand CoursesComboBox_SelectionChangedCmd { get; private set; }
         public ICommand AddCourseBtn_ClickCmd { get; private set; }
@@ -64,17 +60,15 @@ namespace CourseScheduleMaker.ViewModels
             GroupsView = new ObservableCollection<Group>(Groups);
             CoursesView = new ObservableCollection<Course>(Courses);
 
-
             ClassesView!.CollectionChanged += ClassesView_CollectionChanged!;
             Courses.CollectionChanged += Courses_CollectionChanged!;
             Groups.CollectionChanged += Groups_CollectionChanged!;
 
-            ScheduleGridUI = new Grid() { ShowGridLines = true };
             SetupScheduleGrid();
 
             CoursesComboBox_SelectionChangedCmd = new RelayCommand(coursesComboBox_SelectionChanged);
             AddCourseBtn_ClickCmd = new RelayCommand(AddCourseBtn_Click);
-            CourseGroups_SelectionChangedCmd = new RelayCommand<Class>(CourseGroups_SelectionChanged);
+            CourseGroups_SelectionChangedCmd = new RelayCommand<object>(CourseGroups_SelectionChanged);
             RemoveCourseBtn_ClickCmd = new RelayCommand<string>(RemoveCourseBtn_Click);
             ModifyCourseBtn_ClickCmd = new RelayCommand<Class>(ModifyCourseBtn_Click);
             CreateCourseBtn_ClickCmd = new RelayCommand(CreateCourseBtn_Click);
@@ -96,10 +90,6 @@ namespace CourseScheduleMaker.ViewModels
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                //foreach (var course in Courses)
-                //{
-                //    if (course.Code == (e.NewItems[0] as Course).Code && )
-                //}
                 AddCourseView(Courses[^1]);
             }
 
@@ -121,81 +111,28 @@ namespace CourseScheduleMaker.ViewModels
 
         private void AddToSchedule(TextBlock textBlock, int row, int column)
         {
-            ScheduleGridUI.Children.Add(textBlock);
+            ScheduleGridUI!.Children.Add(textBlock);
             Grid.SetRow(textBlock, row);
             Grid.SetColumn(textBlock, column);
             ScheduleGrid[row, column] = textBlock;
         }
 
-       
-        /*
-        private void SetupScheduleGrid1()
-        {
-            //adds row and column definitions
-            for (int i = 0; i < 18; i++)
-            {
-                ScheduleGridUI.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
-                if (i < 8)
-                    ScheduleGridUI.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
-            }
-
-            //adds titles for each row and column
-            ScheduleGridUI.Children.Add(new TextBlock() { Text = "Days/Period" });
-            for (int i = 0; i <= 16; i++)
-            {
-                //column titles (periods 0-16)
-                TextBlock periodTB = new TextBlock() { Text = i.ToString(), Margin = new Thickness(5, 0, 5, 0) };
-                Grid.SetColumn(periodTB, i + 1);
-                ScheduleGridUI.Children.Add(periodTB);
-                //row titles (days of the week)
-                if (i < 7)
-                {
-                    TextBlock dayTB = new TextBlock() { Text = $"{(DayOfWeek)((i + 5) % 7)}", Margin = new Thickness(0, 10, 0, 0) };
-                    Grid.SetRow(dayTB, i + 1);
-                    ScheduleGridUI.Children.Add(dayTB);
-                }
-            }
-            //adds empty textblocks(????) for courses to be added
-            for (int i = 0; i < 7; i++)
-            {
-                for (int j = 0; j < 17; j++)
-                {
-                    ScheduleGrid[i, j] = new TextBlock();
-                }
-            }
-            UpdateScheduleGrid();
-        }
-
-        //updates the grids with the objects in courseBlocks
-        private void UpdateScheduleGrid()
-        {
-            for (int i = 0; i < 7; i++)
-                for (int j = 0; j < 17; j++)
-                {
-                    TextBlock tb = ScheduleGrid[i, j];
-                    Grid.SetRow(tb, i + 1);
-                    Grid.SetColumn(tb, j + 1);
-                    if (!ScheduleGridUI.Children.Contains(tb)) //???
-                        ScheduleGridUI.Children.Add(tb);
-                }
-        }*/
-
 
         private void SetupScheduleGrid()
         {
-            for (int i = 0; i < 18; i++)
+            ScheduleGridUI = new Grid() { ShowGridLines = true };
+            //adds row and column definitions
+            for (int i = 0; i < COLUMNS; i++)
             {
                 ScheduleGridUI.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
-                if (i < 8)
+                if (i < ROWS)
                     ScheduleGridUI.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
             }
-            //ScheduleChildren.Add(new TextBlock() { Text = "Days/Period" });
-            //adds row and column definitions
+            //adds TextBlocks to the entire grid 
             for (int i = 0; i < ROWS; i++)
             {
                 for (int j = 0; j < COLUMNS; j++)
                 {
-
                     var textBlock = new TextBlock()
                     {
                         Margin = new Thickness(5, 10, 5 , 0),
@@ -204,28 +141,12 @@ namespace CourseScheduleMaker.ViewModels
                         (i == 0) ? j.ToString() :
                         (j == 0) ? $"{(DayOfWeek)((i + 5) % 7)}" : ""
                     };
-
                     AddToSchedule(textBlock, i, j);
                 }
             }
-
-            //UpdateScheduleGrid();
         }
 
-        //updates the grids with the objects in courseBlocks
-        /*
-        private void UpdateScheduleGrid()
-        {
-            for (int i = 0; i < 7; i++)
-                for (int j = 0; j < 17; j++)
-                {
-                    TextBlock tb = courseBlocks[i, j];
-                    Grid.SetRow(tb, i + 1);
-                    Grid.SetColumn(tb, j + 1);
-                    if (!scheduleGrid.Children.Contains(tb)) //???
-                        scheduleGrid.Children.Add(tb);
-                }
-        }*/
+       
 
         private void RemoveSession(TextBlock sessionTextBlock, string? sessionToRemove)
         {
@@ -299,9 +220,12 @@ namespace CourseScheduleMaker.ViewModels
             }
             else if (e.Action == NotifyCollectionChangedAction.Reset)
             {
-                foreach (var textBlock in ScheduleGrid)
+                for (int i = 1; i < ROWS; i++)
                 {
-                    textBlock.Inlines.Clear();
+                    for(int j = 1; j < COLUMNS; j++)
+                    {
+                        ScheduleGrid[i,j].Inlines.Clear();
+                    }
                 }
             }
         }
@@ -335,6 +259,7 @@ namespace CourseScheduleMaker.ViewModels
                         {
 
                             ClassesView.Remove(viewedClasses);
+                            RefreshAddedCourses();
                             //addedCourses.Items.Refresh();
                             break;
                         }
@@ -357,16 +282,50 @@ namespace CourseScheduleMaker.ViewModels
         }
 
 
-        //TODO: selection not working
-        private void CourseGroups_SelectionChanged(Class? newClasses)
+        private void RefreshAddedCourses()
         {
-            int pos = ClassesView!.Count - 1;
-            //Class? newClasses = (sender as ComboBox)!.Tag as Class;
-            var oldClass = ClassesView.First(classes => classes.Course == newClasses!.Course);
-            pos = ClassesView.IndexOf(oldClass);
-            ClassesView.Remove(oldClass);
-            //addedCourses.Items.Refresh();
-            ClassesView.Insert(pos, newClasses!.Group!.Classes.First(classes => classes.Course == newClasses!.Course));
+            var temp = new ObservableCollection<Class?>();
+            foreach(var classes in ClassesView!)
+            {
+                temp.Add(classes);
+            }
+            ClassesView.Clear();
+            foreach (var classes in temp)
+            {
+                ClassesView.Add(classes!);
+            }
+            
+        }
+
+        private void CourseGroups_SelectionChanged(object? parameter)
+        {
+            var values = (object[]) parameter!;
+            Group newGroup = (values[0] as Group)!;
+            Class oldClass = (values[1] as Class)!;
+            foreach(var @class in oldClass.Course!.Classes)
+            {
+                if(@class.Group == newGroup)
+                {
+                    var oldClassView = ClassesView!.First(classes => classes.Course == oldClass!.Course);
+                    int pos = ClassesView!.IndexOf(oldClassView);
+                    ClassesView.Remove(oldClassView);
+                    RefreshAddedCourses();
+                    ClassesView.Insert(pos, @class);
+                }
+            }
+            //var newClasses = newClass as Class;
+            //RefreshAddedCourses();
+            //MessageBox.Show(newClasses.ToString());
+            //int pos = ClassesView!.Count - 1;
+            ////Class? newClasses = (sender as ComboBox)!.Tag as Class;
+            //var oldClass = ClassesView.First(classes => classes.Course == newClasses!.Course);
+            //pos = ClassesView.IndexOf(oldClass);
+            //ClassesView.Remove(oldClass);
+            //RefreshAddedCourses();
+            ////addedCourses.Items.Refresh();
+            //ClassesView.Insert(pos, newClasses!.Group!.Classes.First(classes => classes.Course == newClasses!.Course));
+            ////RefreshAddedCourses();
+            //MessageBox.Show(oldClass.Course.Code);
 
         }
         private void RemoveCourseBtn_Click(string? courseCode)
@@ -388,7 +347,6 @@ namespace CourseScheduleMaker.ViewModels
         private void ModifyCourseBtn_Click(Class? newClasses)
         {
 
-            //Class? newClasses = (sender as Button)!.Tag as Class;
             foreach (Class classes in ClassesView!)
             {
                 if (classes.Course == newClasses!.Course)
@@ -429,16 +387,16 @@ namespace CourseScheduleMaker.ViewModels
         //TODO: binding causes an infinite loop and a crash after changing combo box selection several times
         private void CourseGroups_Loaded(ComboBox? comboBox)
         {
-            var hasBinding = comboBox!.GetBindingExpression(ComboBox.SelectedItemProperty);
-            if (hasBinding == null)
-            {
-                Binding binding = new Binding("Group");
-                //var newClass = (sender as ComboBox)!.Tag as Class;
-                //var oldClass = ClassesView!.First(classes => classes.Course == newClass!.Course);
-                binding.Source = comboBox.Tag as Class;
-                comboBox.SetBinding(ComboBox.SelectedItemProperty, binding);
-            }
-            //Task.WaitAll(new Task[] { Task.Delay(1000) });
+            //var hasBinding = comboBox!.GetBindingExpression(ComboBox.SelectedItemProperty);
+            //if (hasBinding == null)
+            //{
+            //    Binding binding = new Binding("Group");
+            //    //var newClass = (sender as ComboBox)!.Tag as Class;
+            //    //var oldClass = ClassesView!.First(classes => classes.Course == newClass!.Course);
+            //    binding.Source = comboBox.Tag as Class;
+            //    comboBox.SetBinding(ComboBox.SelectedItemProperty, binding);
+            //}
+            ////Task.WaitAll(new Task[] { Task.Delay(1000) });
 
         }
 

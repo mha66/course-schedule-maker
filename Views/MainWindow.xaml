@@ -9,6 +9,7 @@
        
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" x:Name="mainWindow">
+    
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closed">
             <i:InvokeCommandAction Command="{Binding MainWindow_ClosedCmd}"/>
@@ -16,6 +17,7 @@
     </i:Interaction.Triggers>
 
     <Window.Resources>
+        <local:CourseGroupsConverter x:Key="MultiConverter"/>
         <DataTemplate x:Key="courseNameTemplate">
             <TextBlock>
                 <Run Text="{Binding Path=Name}"/>
@@ -35,7 +37,6 @@
     </Window.Resources>
     <Grid HorizontalAlignment="Center">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -67,8 +68,10 @@
                 <Button x:Name="createCourseBtn" Margin="20,0,0,0" Command="{Binding CreateCourseBtn_ClickCmd}">Create</Button>
             </StackPanel>
         </DockPanel>
-        <Label Grid.Row="3" Content="l"/>
-        <ListView x:Name="addedCourses" x:FieldModifier="public" ItemsSource="{Binding ClassesView}" Grid.Row="1" Grid.Column="0" Margin="20">
+        
+        <ListView x:Name="addedCourses" x:FieldModifier="public" 
+                  ItemsSource="{Binding ClassesView, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                  Grid.Row="1" Grid.Column="0" Margin="20">
             <!--TODO: Center content -->
             <ListView.View>
                 <GridView AllowsColumnReorder="false" ColumnHeaderToolTip="Course Information">
@@ -83,11 +86,18 @@
                                           IsSynchronizedWithCurrentItem="True"
                                           ItemTemplate="{StaticResource groupNameTemplate}" 
                                           ItemsSource="{Binding Course.Groups}">
+                                          
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="SelectionChanged">
                                             <i:InvokeCommandAction 
-                                                Command="{Binding DataContext.CourseGroups_SelectionChangedCmd, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                                CommandParameter="{Binding}"/>
+                                                Command="{Binding DataContext.CourseGroups_SelectionChangedCmd, RelativeSource={RelativeSource AncestorType=ListView}}">
+                                                <i:InvokeCommandAction.CommandParameter>
+                                                    <MultiBinding Converter="{StaticResource MultiConverter}">
+                                                        <Binding ElementName="courseGroups" Path="SelectedItem"/>
+                                                        <Binding/>
+                                                    </MultiBinding>
+                                                </i:InvokeCommandAction.CommandParameter>
+                                            </i:InvokeCommandAction>
                                         </i:EventTrigger>
                                         <i:EventTrigger EventName="Loaded">
                                             <i:InvokeCommandAction 
