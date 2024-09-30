@@ -40,7 +40,7 @@ namespace CourseScheduleMaker
         }
         public static SQLiteConnection CreateConnection()
         {
-            SQLiteConnection conn = new SQLiteConnection("Data Source=CoursesDB.db; Version = 3; New = True; Compress = True; ");
+            var conn = new SQLiteConnection("Data Source=CoursesDB.db; Version = 3; New = True; Compress = True; ");
 
             try
             {
@@ -128,32 +128,19 @@ namespace CourseScheduleMaker
         public static void InsertEnumData()
         {
             SQLiteCommand cmd = Connection.CreateCommand();
+
             cmd.CommandText = """
-                               SELECT
-                                (SELECT Count(*) FROM SessionType) AS  CountType,
-                                (SELECT Count(*) FROM DayOfWeek) AS CountDay;
-                               """;
-            SQLiteDataReader reader = cmd.ExecuteReader();
-            reader.Read();
-            Int64 countTypes = reader.GetInt64(0), countDays = reader.GetInt64(1);
-            reader.Close();
-            if (countTypes == 0)
-            {
-                //TODO: use INSERT OR IGNORE
-                cmd.CommandText = """
-                                 INSERT INTO SessionType (SessionTypeId, Name)
+                                 INSERT OR IGNORE INTO SessionType (SessionTypeId, Name)
                                  VALUES
                                  	(0, 'Lec'),
                                  	(1, 'Sec'),
                                  	(2, 'Lab');
                                  """;
 
-                cmd.ExecuteNonQuery();
-            }
-            if (countDays == 0)
-            {
-                cmd.CommandText = """
-                                 INSERT INTO DayOfWeek (DayOfWeekId, Name)
+            cmd.ExecuteNonQuery();
+
+            cmd.CommandText = """
+                                 INSERT OR IGNORE INTO DayOfWeek (DayOfWeekId, Name)
                                  VALUES
                                     (0, 'Sunday'),
                                     (1, 'Monday'),
@@ -164,8 +151,8 @@ namespace CourseScheduleMaker
                                     (6, 'Saturday');
                                  """;
 
-                cmd.ExecuteNonQuery();
-            }
+            cmd.ExecuteNonQuery();
+
         }
 
         
