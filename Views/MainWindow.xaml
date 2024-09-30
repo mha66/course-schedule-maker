@@ -68,7 +68,7 @@
                 <Button x:Name="createCourseBtn" Margin="20,0,0,0" Command="{Binding CreateCourseBtn_ClickCmd}">Create</Button>
             </StackPanel>
         </DockPanel>
-        
+
         <ListView x:Name="addedCourses" x:FieldModifier="public" 
                   ItemsSource="{Binding ClassesView, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
                   Grid.Row="1" Grid.Column="0" Margin="20">
@@ -86,7 +86,7 @@
                                           IsSynchronizedWithCurrentItem="True"
                                           ItemTemplate="{StaticResource groupNameTemplate}" 
                                           ItemsSource="{Binding Course.Groups}">
-                                          
+
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="SelectionChanged">
                                             <i:InvokeCommandAction 
@@ -99,11 +99,6 @@
                                                 </i:InvokeCommandAction.CommandParameter>
                                             </i:InvokeCommandAction>
                                         </i:EventTrigger>
-                                        <i:EventTrigger EventName="Loaded">
-                                            <i:InvokeCommandAction 
-                                                Command="{Binding DataContext.CourseGroups_LoadedCmd, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                                CommandParameter="{Binding ElementName=courseGroups}"/>
-                                        </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                 </ComboBox>
                             </DataTemplate>
@@ -112,7 +107,6 @@
                     <GridViewColumn Header="Remove" Width="100">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <!--TODO: should bind Tag to Course.Id -->
                                 <Button x:Name="removeCourseBtn" 
                                         Command="{Binding DataContext.RemoveCourseBtn_ClickCmd, RelativeSource={RelativeSource AncestorType=ListView}}"
                                         CommandParameter="{Binding Course.Code}">X</Button>
@@ -130,8 +124,6 @@
                 </GridView>
             </ListView.View>
         </ListView>
-
-        <!--TODO: create row and column headers in xaml instead of using code-->
         <ContentControl Content="{Binding ScheduleGridUI}" Grid.Row="2" Grid.Column="0" />
     </Grid>
 </Window>

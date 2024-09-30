@@ -21,6 +21,7 @@ namespace CourseScheduleMaker.ViewModels
     public class MainWindowViewModel : ObservableObject
     {
         public const int ROWS = 8, COLUMNS = 18;
+
         public ObservableCollection<Class>? _classesView = new ObservableCollection<Class>();
         //TODO: remove static
         public static ObservableCollection<Course>? CoursesView { get; set; }
@@ -28,7 +29,7 @@ namespace CourseScheduleMaker.ViewModels
         public static ObservableCollection<Group>? GroupsView { get; set; }
         public Group? SelectedGroup { get; set; }
 
-        TextBlock[,] ScheduleGrid { get; set; } = new TextBlock[ROWS, COLUMNS];
+        private TextBlock[,] ScheduleGrid { get; set; } = new TextBlock[ROWS, COLUMNS];
 
         public ObservableCollection<Class>? ClassesView
         {
@@ -47,7 +48,6 @@ namespace CourseScheduleMaker.ViewModels
         public ICommand ModifyCourseBtn_ClickCmd { get; private set; }
         public ICommand CreateCourseBtn_ClickCmd { get; private set; }
         public ICommand MainWindow_ClosedCmd { get; private set; }
-        public ICommand CourseGroups_LoadedCmd { get; private set; }
         #endregion
 
         public MainWindowViewModel()
@@ -73,7 +73,6 @@ namespace CourseScheduleMaker.ViewModels
             ModifyCourseBtn_ClickCmd = new RelayCommand<Class>(ModifyCourseBtn_Click);
             CreateCourseBtn_ClickCmd = new RelayCommand(CreateCourseBtn_Click);
             MainWindow_ClosedCmd = new RelayCommand(MainWindow_Closed);
-            CourseGroups_LoadedCmd = new RelayCommand<ComboBox>(CourseGroups_Loaded);
 
         }
 
@@ -260,7 +259,6 @@ namespace CourseScheduleMaker.ViewModels
 
                             ClassesView.Remove(viewedClasses);
                             RefreshAddedCourses();
-                            //addedCourses.Items.Refresh();
                             break;
                         }
                         else if (viewedClasses.Course == course && viewedClasses.Group == group)
@@ -272,7 +270,6 @@ namespace CourseScheduleMaker.ViewModels
                         if (classes.Course == course)
                         {
                             ClassesView.Add(classes);
-                            //addedCourses.Items.Refresh();
                             break;
                         }
                     }
@@ -311,27 +308,14 @@ namespace CourseScheduleMaker.ViewModels
                     ClassesView.Remove(oldClassView);
                     RefreshAddedCourses();
                     ClassesView.Insert(pos, @class);
+                    break;
                 }
             }
-            //var newClasses = newClass as Class;
-            //RefreshAddedCourses();
-            //MessageBox.Show(newClasses.ToString());
-            //int pos = ClassesView!.Count - 1;
-            ////Class? newClasses = (sender as ComboBox)!.Tag as Class;
-            //var oldClass = ClassesView.First(classes => classes.Course == newClasses!.Course);
-            //pos = ClassesView.IndexOf(oldClass);
-            //ClassesView.Remove(oldClass);
-            //RefreshAddedCourses();
-            ////addedCourses.Items.Refresh();
-            //ClassesView.Insert(pos, newClasses!.Group!.Classes.First(classes => classes.Course == newClasses!.Course));
-            ////RefreshAddedCourses();
-            //MessageBox.Show(oldClass.Course.Code);
 
         }
         private void RemoveCourseBtn_Click(string? courseCode)
         {
 
-            // Button button = (sender as Button)!;
             foreach (var classes in ClassesView!)
             {
                 if (classes.Course!.Code == courseCode)
@@ -352,10 +336,6 @@ namespace CourseScheduleMaker.ViewModels
                 if (classes.Course == newClasses!.Course)
                 {
                     ClassesView.Remove(classes);
-
-                    //addedCourses.Items.Refresh();
-
-
                     break;
                 }
             }
@@ -366,8 +346,6 @@ namespace CourseScheduleMaker.ViewModels
                 if (classes.Course!.Code == newClasses.Course!.Code)
                 {
                     ClassesView.Add(classes);
-                    //addedCourses.Items.Refresh();
-
                     break;
                 }
             }
@@ -384,21 +362,6 @@ namespace CourseScheduleMaker.ViewModels
             DBSource.CloseConnection();
         }
 
-        //TODO: binding causes an infinite loop and a crash after changing combo box selection several times
-        private void CourseGroups_Loaded(ComboBox? comboBox)
-        {
-            //var hasBinding = comboBox!.GetBindingExpression(ComboBox.SelectedItemProperty);
-            //if (hasBinding == null)
-            //{
-            //    Binding binding = new Binding("Group");
-            //    //var newClass = (sender as ComboBox)!.Tag as Class;
-            //    //var oldClass = ClassesView!.First(classes => classes.Course == newClass!.Course);
-            //    binding.Source = comboBox.Tag as Class;
-            //    comboBox.SetBinding(ComboBox.SelectedItemProperty, binding);
-            //}
-            ////Task.WaitAll(new Task[] { Task.Delay(1000) });
-
-        }
 
     }
 }

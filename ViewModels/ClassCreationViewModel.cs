@@ -20,10 +20,7 @@ namespace CourseScheduleMaker.ViewModels
     {
         //when changing the default value of SelectedSessionsNum, also change the default collection of SessionBoxes
         public ObservableCollection<SessionTextBoxes> SessionBoxes { get; set; } = new ObservableCollection<SessionTextBoxes>() { new SessionTextBoxes(), new SessionTextBoxes() };
-
-        //TODO: put SessionsNum_SelectionChanged() logic inside setter and remove that method/command
         public int SelectedSessionsNum { get; set; } = 2;
-        //SetProperty(ref _selectedSessionsNum, value);
         public ObservableCollection<int> SessionsNums { get; set; } = new ObservableCollection<int>() { 1, 2, 3, 4 };
 
         public string? CourseName { get; set; }
