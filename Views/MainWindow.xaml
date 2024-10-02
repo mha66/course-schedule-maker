@@ -45,8 +45,8 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
-        <DockPanel Grid.Row="0" Grid.Column="0">
-            <TextBlock DockPanel.Dock="Top" Height="20">Course</TextBlock>
+        <DockPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" Margin="10">
+            <TextBlock DockPanel.Dock="Left" Height="20" FontWeight="Bold">Course</TextBlock>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Margin="10,2,0,0"
                            Text="{Binding ElementName=coursesComboBox, Path=SelectedItem}"/>
@@ -106,7 +106,7 @@
                     <GridViewColumn Header="Remove" Width="100">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button x:Name="removeCourseBtn" 
+                                <Button x:Name="removeCourseBtn"
                                         Command="{Binding DataContext.RemoveCourseBtn_ClickCmd, RelativeSource={RelativeSource AncestorType=ListView}}"
                                         CommandParameter="{Binding Course.Code}">X</Button>
                             </DataTemplate>

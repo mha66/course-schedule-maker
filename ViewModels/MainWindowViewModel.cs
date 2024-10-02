@@ -114,13 +114,14 @@ namespace CourseScheduleMaker.ViewModels
             ScheduleGridUI!.Children.Add(border);
             Grid.SetRow(border, row);
             Grid.SetColumn(border, column);
+           // Grid.SetColumnSpan(border, 2);
             ScheduleGrid[row, column] = textBlock;
         }
 
 
         private void SetupScheduleGrid()
         {
-            ScheduleGridUI = new Grid();
+            ScheduleGridUI = new Grid() {HorizontalAlignment = HorizontalAlignment.Center };
             //adds row and column definitions
             for (int i = 0; i < COLUMNS; i++)
             {
