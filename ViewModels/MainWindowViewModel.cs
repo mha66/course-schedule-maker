@@ -15,6 +15,7 @@ using System.Windows.Documents;
 using System.Windows;
 using System.Configuration;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace CourseScheduleMaker.ViewModels
 {
@@ -108,18 +109,18 @@ namespace CourseScheduleMaker.ViewModels
         }
 
 
-        private void AddToSchedule(TextBlock textBlock, int row, int column)
+        private void AddToSchedule(TextBlock textBlock, Border border, int row, int column)
         {
-            ScheduleGridUI!.Children.Add(textBlock);
-            Grid.SetRow(textBlock, row);
-            Grid.SetColumn(textBlock, column);
+            ScheduleGridUI!.Children.Add(border);
+            Grid.SetRow(border, row);
+            Grid.SetColumn(border, column);
             ScheduleGrid[row, column] = textBlock;
         }
 
 
         private void SetupScheduleGrid()
         {
-            ScheduleGridUI = new Grid() { ShowGridLines = true };
+            ScheduleGridUI = new Grid();
             //adds row and column definitions
             for (int i = 0; i < COLUMNS; i++)
             {
@@ -140,7 +141,13 @@ namespace CourseScheduleMaker.ViewModels
                         (i == 0) ? j.ToString() :
                         (j == 0) ? $"{(DayOfWeek)((i + 5) % 7)}" : ""
                     };
-                    AddToSchedule(textBlock, i, j);
+                    var border = new Border()
+                    {
+                        Child = textBlock,
+                        BorderBrush = Brushes.Black,
+                        BorderThickness = new Thickness(0.5)
+                    };
+                    AddToSchedule(textBlock, border, i, j);
                 }
             }
         }

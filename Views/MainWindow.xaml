@@ -77,7 +77,6 @@
                 <GridView AllowsColumnReorder="false" ColumnHeaderToolTip="Course Information">
                     <GridViewColumn DisplayMemberBinding="{Binding Path=Course.Code}" Header="Course Code" Width="100"/>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=Course.Name}" Header="Course Name" Width="100"/>
-                    <!--TODO: selected group not showing properly-->
                     <GridViewColumn DisplayMemberBinding="{Binding Path=Group.Name}" Header="Group" Width="100"/>
                     <GridViewColumn Header="Class" Width="100">
                         <GridViewColumn.CellTemplate>

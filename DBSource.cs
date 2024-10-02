@@ -30,8 +30,6 @@ namespace CourseScheduleMaker
             
             CreateTables();
             InsertEnumData();
-            //ReadData();
-            //Connection.Close();
         }
 
         public static void CloseConnection()
