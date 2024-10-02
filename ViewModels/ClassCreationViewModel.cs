@@ -71,7 +71,7 @@ namespace CourseScheduleMaker.ViewModels
             {
                 var sessionViewModel = sessionBox.DataContext as SessionTextBoxesViewModel;
                 classes.AddSession(new Session(sessionViewModel!.SessionKind, sessionViewModel.Instructor!,
-                    sessionViewModel.Day, sessionViewModel.Period));
+                    sessionViewModel.Day, (int)char.GetNumericValue(sessionViewModel.Period![0])));
             }
             DBSource.InsertData(classes);
             MessageBox.Show("Courses and groups are updated!");

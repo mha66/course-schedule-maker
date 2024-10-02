@@ -115,7 +115,8 @@
                     <GridViewColumn Header="Modify" Width="100">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button x:Name="modifyCourseBtn"  Command="{Binding DataContext.ModifyCourseBtn_ClickCmd, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                <Button x:Name="modifyCourseBtn"  
+                                        Command="{Binding DataContext.ModifyCourseBtn_ClickCmd, RelativeSource={RelativeSource AncestorType=ListView}}"
                                         CommandParameter="{Binding}">M</Button>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>

@@ -21,7 +21,7 @@ namespace CourseScheduleMaker.ViewModels
 {
     public class MainWindowViewModel : ObservableObject
     {
-        public const int ROWS = 8, COLUMNS = 18;
+        public const int ROWS = 8, COLUMNS = 9;
 
         public ObservableCollection<Class>? _classesView = new ObservableCollection<Class>();
         //TODO: remove static
@@ -114,7 +114,6 @@ namespace CourseScheduleMaker.ViewModels
             ScheduleGridUI!.Children.Add(border);
             Grid.SetRow(border, row);
             Grid.SetColumn(border, column);
-           // Grid.SetColumnSpan(border, 2);
             ScheduleGrid[row, column] = textBlock;
         }
 
@@ -136,11 +135,15 @@ namespace CourseScheduleMaker.ViewModels
                 {
                     var textBlock = new TextBlock()
                     {
-                        Margin = new Thickness(5, 10, 5 , 0),
+                        Margin = new Thickness(5),
 
                         Text = (i == 0 && j == 0) ? "Days/Period" :
-                        (i == 0) ? j.ToString() :
-                        (j == 0) ? $"{(DayOfWeek)((i + 5) % 7)}" : ""
+                        (i == 0) ? $"{j * 2 - 1}--{j * 2}" :
+                        (j == 0) ? $"{(DayOfWeek)((i + 5) % 7)}" : "",
+
+                        TextAlignment = TextAlignment.Center,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        HorizontalAlignment = HorizontalAlignment.Center
                     };
                     var border = new Border()
                     {
@@ -195,7 +198,7 @@ namespace CourseScheduleMaker.ViewModels
                 {
                     int day = (int)session.Day;
                     int i = (day == 5) ? 7 : (day - 5 + 7) % 7;
-                    int j = session.Period + 1;
+                    int j = (session.Period + 1)/2;
 
                     var inlines = ScheduleGrid[i, j].Inlines;
                     //even-indexed inlines contain session info, odd-indexed ones contain Xs
@@ -218,7 +221,7 @@ namespace CourseScheduleMaker.ViewModels
                         {
                             int day = (int)session.Day;
                             int i = (day == 5) ? 7 : (day - 5 + 7) % 7;
-                            int j = session.Period + 1;
+                            int j = (session.Period + 1) / 2;
                             RemoveSession(ScheduleGrid[i, j], session.ToString());
                         }
                         return;
