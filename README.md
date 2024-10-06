@@ -2,7 +2,7 @@
 This is an application that helps you make a schedule for a semester's courses. <br/>
 The app was made using C#, SQLite, and the MVVM (Model-View-ViewModel) design pattern.
 ## Features
-- Create Courses and add classes to these courses
+- Create courses and add classes to these courses
 - Add any class from any course to the schedule
 - Remove any added classes from the schedule
 - Change classes of an added course
