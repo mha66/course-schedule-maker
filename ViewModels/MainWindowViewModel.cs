@@ -141,6 +141,8 @@ namespace CourseScheduleMaker.ViewModels
                         (i == 0) ? $"{j * 2 - 1}--{j * 2}" :
                         (j == 0) ? $"{(DayOfWeek)((i + 5) % 7)}" : "",
 
+                        FontStyle = (i == 0 && j == 0) ? FontStyles.Italic : FontStyles.Normal,
+                        FontWeight = (i == 0 || j == 0) ? FontWeights.Bold : FontWeights.Normal,
                         TextAlignment = TextAlignment.Center,
                         VerticalAlignment = VerticalAlignment.Center,
                         HorizontalAlignment = HorizontalAlignment.Center
