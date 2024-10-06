@@ -8,7 +8,7 @@
         xmlns:vm="clr-namespace:CourseScheduleMaker.ViewModels" 
        
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" x:Name="mainWindow">
+        Title="Course Schedule Maker" Height="450" Width="800" x:Name="mainWindow">
     
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closed">

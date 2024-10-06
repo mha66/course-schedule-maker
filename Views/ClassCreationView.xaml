@@ -8,7 +8,7 @@
         xmlns:vm="clr-namespace:CourseScheduleMaker.ViewModels"
         xmlns:sys="clr-namespace:System;assembly=mscorlib" 
         mc:Ignorable="d"
-        Title="ClassCreationView" Height="450" Width="800">
+        Title="Create Courses" Height="450" Width="800">
     <Window.DataContext>
         <vm:ClassCreationViewModel x:Name="ViewModel"/>
     </Window.DataContext>

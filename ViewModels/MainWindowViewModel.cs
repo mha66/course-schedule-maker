@@ -201,9 +201,12 @@ namespace CourseScheduleMaker.ViewModels
                     int j = (session.Period + 1)/2;
 
                     var inlines = ScheduleGrid[i, j].Inlines;
+                    //ScheduleGrid[i, j].Foreground = (inlines.Count != 0) ? Brushes.Red : Brushes.Black;
+
                     //even-indexed inlines contain session info, odd-indexed ones contain Xs
                     if (inlines.Count != 0)
                     {
+                        
                         inlines.Add("\nXXXXXXXXXX\n");
                     }
                     inlines.Add(session.ToString());
